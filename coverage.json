@@ -1,0 +1,39 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-24T10:14:45.959Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 1,
+    "implemented": 1,
+    "items": [
+      {
+        "id": "REQ-35",
+        "summary": "Replace the current logo in the home page hero section with the uploaded circular emblem image (IMG-20260121-WA0003-1.jpg) — the version without the white background — featuring 'करणी सेना युवा शक्ति' text in Devanagari script around the top, two deity portraits, crossed swords, and a central sunrise symbol over water waves with gradient orange-yellow background. Save the image as a static asset at frontend/public/assets/generated/logo-emblem.png and render it in the hero section.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/HomePage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/HomePage.tsx"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "build-request.json",
+    "caffeine.lock.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/public/assets/generated/logo-emblem.dim_512x512.png",
+    "frontend/src/pages/HomePage.tsx",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}

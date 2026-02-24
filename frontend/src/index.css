@@ -1,0 +1,137 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Warm traditional color palette using OKLCH */
+    --background: oklch(98% 0.01 60);
+    --foreground: oklch(20% 0.02 60);
+    --card: oklch(100% 0 0);
+    --card-foreground: oklch(20% 0.02 60);
+    --popover: oklch(100% 0 0);
+    --popover-foreground: oklch(20% 0.02 60);
+    
+    /* Saffron/Orange primary */
+    --primary: oklch(65% 0.18 45);
+    --primary-foreground: oklch(100% 0 0);
+    
+    /* Deep red secondary */
+    --secondary: oklch(45% 0.15 25);
+    --secondary-foreground: oklch(100% 0 0);
+    
+    /* Gold accent */
+    --accent: oklch(75% 0.12 85);
+    --accent-foreground: oklch(20% 0.02 60);
+    
+    --muted: oklch(95% 0.01 60);
+    --muted-foreground: oklch(50% 0.02 60);
+    --border: oklch(90% 0.01 60);
+    --input: oklch(90% 0.01 60);
+    --ring: oklch(65% 0.18 45);
+    --radius: 0.5rem;
+    
+    /* Status colors */
+    --destructive: oklch(55% 0.22 25);
+    --destructive-foreground: oklch(100% 0 0);
+    --success: oklch(60% 0.15 145);
+    --success-foreground: oklch(100% 0 0);
+    --warning: oklch(70% 0.15 75);
+    --warning-foreground: oklch(20% 0.02 60);
+  }
+
+  .dark {
+    --background: oklch(15% 0.02 60);
+    --foreground: oklch(95% 0.01 60);
+    --card: oklch(18% 0.02 60);
+    --card-foreground: oklch(95% 0.01 60);
+    --popover: oklch(18% 0.02 60);
+    --popover-foreground: oklch(95% 0.01 60);
+    
+    /* Brighter saffron for dark mode */
+    --primary: oklch(70% 0.20 45);
+    --primary-foreground: oklch(15% 0.02 60);
+    
+    /* Lighter red for dark mode */
+    --secondary: oklch(55% 0.18 25);
+    --secondary-foreground: oklch(95% 0.01 60);
+    
+    /* Brighter gold for dark mode */
+    --accent: oklch(80% 0.14 85);
+    --accent-foreground: oklch(15% 0.02 60);
+    
+    --muted: oklch(25% 0.02 60);
+    --muted-foreground: oklch(65% 0.02 60);
+    --border: oklch(25% 0.02 60);
+    --input: oklch(25% 0.02 60);
+    --ring: oklch(70% 0.20 45);
+    
+    --destructive: oklch(60% 0.24 25);
+    --destructive-foreground: oklch(95% 0.01 60);
+    --success: oklch(65% 0.17 145);
+    --success-foreground: oklch(15% 0.02 60);
+    --warning: oklch(75% 0.17 75);
+    --warning-foreground: oklch(15% 0.02 60);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .fade-in {
+    animation: fadeIn 0.5s ease-in;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+/* Print styles for admission card */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  
+  .print\:block,
+  .print\:block * {
+    visibility: visible;
+  }
+  
+  /* Ensure the admission card and its contents are visible */
+  [class*="AdmissionCard"],
+  [class*="AdmissionCard"] * {
+    visibility: visible;
+  }
+  
+  /* Hide print buttons and other UI elements */
+  .print\:hidden {
+    display: none !important;
+  }
+  
+  /* Optimize page layout for printing */
+  @page {
+    margin: 1cm;
+    size: A4;
+  }
+  
+  /* Ensure proper spacing and layout */
+  body {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}

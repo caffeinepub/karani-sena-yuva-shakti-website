@@ -1,0 +1,25 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Replace hero section logo with circular emblem image without white background",
+  "requirements": [
+    {
+      "id": "REQ-35",
+      "summary": "Replace the current logo in the home page hero section with the uploaded circular emblem image (IMG-20260121-WA0003-1.jpg) without white background, featuring 'करणी सेना युवा शक्ति' text, deity portraits, crossed swords, and sunrise symbol. Save as frontend/public/assets/generated/logo-emblem.png and render in hero section.",
+      "acceptanceCriteria": [
+        "The hero section on the home page displays the circular emblem from IMG-20260121-WA0003-1.jpg",
+        "The logo image has no white background (transparent or blended with the hero background)",
+        "The image is served from frontend/public/assets/generated/logo-emblem.png",
+        "The logo renders correctly on both desktop and mobile viewports",
+        "No previous placeholder or old logo is visible in the hero section"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/HomePage.tsx",
+          "operation": "modify",
+          "description": "Replace the current logo image source in the hero section with the new circular emblem from frontend/public/assets/generated/logo-emblem.dim_512x512.png. Ensure the img element references the exact generated filename, adjust sizing and styling to display the emblem prominently without white background artifacts, and verify responsive behavior across desktop and mobile viewports. Remove any previous placeholder logo references."
+        }
+      ]
+    }
+  ]
+}

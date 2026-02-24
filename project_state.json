@@ -1,0 +1,410 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 19,
+  "summary": "Karani Sena Yuva Shakti organization website with home page (hero section with custom circular logo emblem without white background, admin-managed photo gallery, news section), public admission form page (collects candidate name, father's name, address, email, DOB, mobile, and photo; generates unique 10-character ID in format YYYY0-XXXXX; displays printable admission card after submission), and Internet Identity-protected admin panel with sidebar menu navigation and super admin authorization (manage submissions with unique IDs, gallery photos, news posts, and admin users); organization name displayed in Devanagari script as 'करणी सेना युवा शक्ति'",
+  "architectural_notes": [
+    "Using Internet Identity for admin authentication",
+    "Backend database for storing admission form submissions",
+    "Photo upload functionality for both admissions and gallery",
+    "Admin panel for content management (submissions, photos, news)",
+    "Super admin system with permanent first-user registration",
+    "Multi-admin support with role-based access control",
+    "Admin management interface for adding/removing admins",
+    "Admin reset functionality for system recovery",
+    "Admin panel redesigned with sidebar menu navigation for better organization",
+    "Public admission form allows anonymous submissions without authentication"
+  ],
+  "known_issues": [],
+  "isFixRequest": false,
+  "imageRequirements": "## Edit Images\n- Remove white background to make it fully transparent, preserving the circular emblem shape (IMG-20260121-WA0003-1.jpg > logo-emblem.dim_512x512.png)",
+  "existing_features": [
+    {
+      "id": "feature-create-a-home-page-with-a-hero-section-displaying-the-organization-logo-and-name-karani-sena-yuva-shakti",
+      "title": "Create a home page with a hero section displaying the organization logo and name 'Karani Sena Yuva Shakti'",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-photo-gallery-section-on-the-home-page-that-displays-multiple-photos-uploaded-by-admins",
+      "title": "Implement a photo gallery section on the home page that displays multiple photos uploaded by admins",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-organization-news-and-messages-section-on-the-home-page-that-displays-posts-created-by-admins",
+      "title": "Add an organization news and messages section on the home page that displays posts created by admins",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-an-admission-form-page-with-fields-for-full-name-complete-address-email-date-of-birth-and-mobile-number",
+      "title": "Create an admission form page with fields for: full name, complete address, email, date of birth, and mobile number",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-photo-upload-field-to-the-admission-form-where-candidates-can-upload-their-own-photo",
+      "title": "Add a photo upload field to the admission form where candidates can upload their own photo",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-an-admin-panel-protected-by-internet-identity-authentication-that-allows-admins-to-log-in-securely",
+      "title": "Create an admin panel protected by Internet Identity authentication that allows admins to log in securely",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-admin-functionality-to-view-and-manage-all-admission-form-submissions-in-the-admin-panel",
+      "title": "Implement admin functionality to view and manage all admission form submissions in the admin panel",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-admin-functionality-to-upload-view-and-delete-multiple-photos-for-the-home-page-gallery",
+      "title": "Add admin functionality to upload, view, and delete multiple photos for the home page gallery",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-admin-functionality-to-create-edit-and-delete-organization-news-and-message-posts",
+      "title": "Implement admin functionality to create, edit, and delete organization news and message posts",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-design-the-website-with-a-visually-cohesive-theme-using-warm-traditional-colors-saffron-deep-red-gold-accents-with-clean-typography-and-culturally-respectful-layout-patterns-appropriate-for-a-youth-organization",
+      "title": "Design the website with a visually cohesive theme using warm, traditional colors (saffron, deep red, gold accents) with clean typography and culturally respectful layout patterns appropriate for a youth organization",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-admin-link-appears-in-the-navigation-menu-on-all-pages-including-the-home-page-so-authenticated-users-can-access-the-admin-panel",
+      "title": "Ensure the Admin link appears in the navigation menu on all pages, including the home page, so authenticated users can access the admin panel",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-manage-admins-section-in-the-admin-panel-that-displays-a-list-of-all-current-admins-with-their-principal-ids-with-add-and-remove-functionality",
+      "title": "Create a 'Manage Admins' section in the admin panel that displays a list of all current admins with their principal IDs, with add and remove functionality",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-reset-admin-system-button-in-the-manage-admins-section-that-prompts-for-confirmation-before-calling-the-backend-reset-function",
+      "title": "Add a 'Reset Admin System' button in the Manage Admins section that prompts for confirmation before calling the backend reset function",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-protectedroute-component-to-call-backend-authorization-check-instead-of-always-denying-access-and-handle-the-super-admin-initialization-flow-for-first-time-access",
+      "title": "Update the ProtectedRoute component to call backend authorization check instead of always denying access, and handle the super admin initialization flow for first-time access",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-restructure-the-admin-panel-layout-to-use-a-left-sidebar-navigation-menu-instead-of-the-current-tabbed-interface-with-menu-items-for-view-submissions-manage-gallery-manage-news-and-manage-admins",
+      "title": "Restructure the admin panel layout to use a left sidebar navigation menu instead of the current tabbed interface, with menu items for: View Submissions, Manage Gallery, Manage News, and Manage Admins",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-the-authorization-issue-preventing-the-super-admin-from-uploading-photos-to-the-gallery-in-the-manage-gallery-section-of-the-admin-panel",
+      "title": "Fix the authorization issue preventing the super admin from uploading photos to the gallery in the Manage Gallery section of the admin panel",
+      "reqIds": [
+        "REQ-21"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-frontend-admission-form-page-to-include-a-father-s-name-text-input-field-positioned-immediately-after-the-full-name-field-with-appropriate-validation-requiring-this-field-to-be-filled-before-submission",
+      "title": "Update the frontend admission form page to include a 'Father's Name' text input field positioned immediately after the 'Full Name' field, with appropriate validation requiring this field to be filled before submission",
+      "reqIds": [
+        "REQ-25"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-printable-admission-card-component-that-displays-immediately-after-successful-form-submission-showing-the-candidate-s-generated-unique-id-full-name-father-s-name-date-of-birth-mobile-number-uploaded-photo-and-submission-date-in-a-card-style-layout-optimized-for-printing",
+      "title": "Create a printable admission card component that displays immediately after successful form submission, showing the candidate's generated unique ID, full name, father's name, date of birth, mobile number, uploaded photo, and submission date in a card-style layout optimized for printing",
+      "reqIds": [
+        "REQ-26"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-admin-panel-s-view-submissions-section-to-display-the-unique-admission-id-for-each-candidate-submission-in-the-accordion-list-view",
+      "title": "Update the admin panel's 'View Submissions' section to display the unique admission ID for each candidate submission in the accordion list view",
+      "reqIds": [
+        "REQ-27"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-frontend-usesubmitadmissionform-hook-to-handle-anonymous-submissions-without-passing-authentication-credentials",
+      "title": "Update the frontend useSubmitAdmissionForm hook to handle anonymous submissions without passing authentication credentials",
+      "reqIds": [
+        "REQ-29"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-verify-the-complete-public-admission-flow-works-end-to-end-anonymous-visitors-access-the-form-fill-it-out-with-all-required-fields-including-father-s-name-submit-successfully-and-receive-their-printable-admission-card-with-the-unique-admission-id",
+      "title": "Verify the complete public admission flow works end-to-end: anonymous visitors access the form, fill it out with all required fields including father's name, submit successfully, and receive their printable admission card with the unique admission ID",
+      "reqIds": [
+        "REQ-30"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-replace-all-occurrences-of-karani-sena-yuva-shakti-with-the-devanagari-script-in-the-hero-section-heading-on-the-home-page",
+      "title": "Replace all occurrences of 'Karani Sena Yuva Shakti' with the Devanagari script 'करणी सेना युवा शक्ति' in the hero section heading on the home page",
+      "reqIds": [
+        "REQ-31"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-html-document-title-in-frontend-index-html-to-use-instead-of-karani-sena-yuva-shakti-website",
+      "title": "Update the HTML document title in frontend/index.html to use 'करणी सेना युवा शक्ति' instead of 'Karani Sena Yuva Shakti Website'",
+      "reqIds": [
+        "REQ-32"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-replace-any-other-references-to-karani-sena-yuva-shakti-throughout-the-ui-components-with-including-the-layout-component-header-navigation-and-any-other-visible-text-instances",
+      "title": "Replace any other references to 'Karani Sena Yuva Shakti' throughout the UI components with 'करणी सेना युवा शक्ति', including the Layout component header/navigation and any other visible text instances",
+      "reqIds": [
+        "REQ-33"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-replace-the-current-logo-in-the-home-page-hero-section-with-the-uploaded-circular-emblem-image-img-20260121-wa0003-jpg-featuring-text-in-devanagari-script-around-the-top-two-deity-portraits-lord-rama-and-lord-parshuram-crossed-swords-and-a-central-sunrise-symbol-over-water-waves-with-gradient-orange-yellow-background",
+      "title": "Replace the current logo in the home page hero section with the uploaded circular emblem image (IMG-20260121-WA0003.jpg) featuring 'करणी सेना युवा शक्ति' text in Devanagari script around the top, two deity portraits (Lord Rama and Lord Parshuram), crossed swords, and a central sunrise symbol over water waves with gradient orange-yellow background",
+      "reqIds": [
+        "REQ-34"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-replace-the-current-logo-in-the-home-page-hero-section-with-the-uploaded-circular-emblem-image-img-20260121-wa0003-1-jpg-the-version-without-the-white-background-featuring-text-in-devanagari-script-around-the-top-two-deity-portraits-crossed-swords-and-a-central-sunrise-symbol-over-water-waves-with-gradient-orange-yellow-background-save-the-image-as-a-static-asset-at-frontend-public-assets-generated-logo-emblem-png-and-render-it-in-the-hero-section",
+      "title": "Replace the current logo in the home page hero section with the uploaded circular emblem image (IMG-20260121-WA0003-1.jpg) — the version without the white background — featuring 'करणी सेना युवा शक्ति' text in Devanagari script around the top, two deity portraits, crossed swords, and a central sunrise symbol over water waves with gradient orange-yellow background. Save the image as a static asset at frontend/public/assets/generated/logo-emblem.png and render it in the hero section.",
+      "reqIds": [
+        "REQ-35"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Home page with hero section, photo gallery, and news section",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Admission form page with candidate details and photo upload",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Admin panel with Internet Identity authentication to manage submissions, gallery, and news",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Store all admission form submissions in the backend database, including candidate details and uploaded photo",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Super admin initialization - automatically register first logged-in user as permanent super admin",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Admin management interface - view, add, and remove admin users (super admin only)",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Admin reset functionality - reset admin system and re-initialize super admin",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Backend authorization checks - verify admin status before granting access to admin features",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Create backend functions to initialize the first authenticated user as the permanent super admin by capturing and storing their Internet Identity principal",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Implement backend functions to manage a list of admin principals, including adding new admins, removing admins (except super admin), and retrieving all current admins",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "Update backend authorization logic to check if a caller is either the super admin or in the admin list before granting access to admin-only functions",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-13",
+      "summary": "Create a backend function to reset the entire admin system by clearing all admins and re-initializing the super admin with the next caller who accesses the reset functionality",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-14",
+      "summary": "Reorganize admin panel with sidebar menu layout containing all admin options (Manage Admins, Manage Gallery, Manage News, View Submissions)",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-15",
+      "summary": "Fix photo upload authorization in admin panel gallery section to properly recognize super admin status",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-16",
+      "summary": "Make admission form publicly accessible without authentication (allow anonymous submissions)",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-17",
+      "summary": "Add 'Father's Name' field to admission form right after candidate's name field",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-18",
+      "summary": "Generate unique 10-character admission ID in format YYYY0-XXXXX (year + 5-digit serial number) for each submission",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-19",
+      "summary": "Display printable admission card with unique ID and candidate details immediately after form submission",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-20",
+      "summary": "Store unique admission ID with all submission data in backend and display in admin panel",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-21",
+      "summary": "Update the backend admission form submission function to allow anonymous (unauthenticated) users to submit admission forms by removing the authorization check that currently blocks anonymous submissions",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-22",
+      "summary": "Add a 'fatherName' text field to the Candidate record type in the backend, positioned after the 'fullName' field in the data structure",
+      "reqIds": [
+        "REQ-23"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-23",
+      "summary": "Implement backend logic to generate a unique 10-character admission ID for each submission in the format YYYY0-XXXXX, where YYYY is the current year, 0 is a separator digit, and XXXXX is a zero-padded 5-digit sequential serial number that increments with each submission",
+      "reqIds": [
+        "REQ-24"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-24",
+      "summary": "Remove the authorization check from the backend submitAdmission function so anonymous users can submit admission forms without authentication",
+      "reqIds": [
+        "REQ-28"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-25",
+      "summary": "Replace all instances of 'Karani Sena Yuva Shakti' with Devanagari script 'करणी सेना युवा शक्ति' throughout the website",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-26",
+      "summary": "Replace the current hero section logo with the uploaded circular emblem (IMG-20260121-WA0003.jpg) featuring 'करणी सेना युवा शक्ति' text, deity portraits, crossed swords, and sunrise symbol",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-27",
+      "summary": "Replace hero section logo with circular emblem image (no white background version) featuring 'करणी सेना युवा शक्ति' text, deity portraits, crossed swords, and sunrise symbol",
+      "reqIds": [],
+      "status": "in_progress"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Karani Sena Yuva Shakti Website",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

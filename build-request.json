@@ -1,0 +1,45 @@
+{
+  "kind": "build_request",
+  "title": "Replace hero section logo with circular emblem image without white background",
+  "projectName": "करणी सेना युवा शक्ति",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-35",
+      "text": "Replace the current logo in the home page hero section with the uploaded circular emblem image (IMG-20260121-WA0003-1.jpg) — the version without the white background — featuring 'करणी सेना युवा शक्ति' text in Devanagari script around the top, two deity portraits, crossed swords, and a central sunrise symbol over water waves with gradient orange-yellow background. Save the image as a static asset at frontend/public/assets/generated/logo-emblem.png and render it in the hero section.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-10",
+          "msg-11",
+          "msg-12"
+        ],
+        "quotes": [
+          "No white background",
+          "Replace the hero section logo with the second image (IMG-20260121-WA0003-1.jpg) — the circular करणी सेना युवा शक्ति emblem without the white background"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The hero section on the home page displays the circular emblem from IMG-20260121-WA0003-1.jpg",
+        "The logo image has no white background (transparent or blended with the hero background)",
+        "The image is served from frontend/public/assets/generated/logo-emblem.png",
+        "The logo renders correctly on both desktop and mobile viewports",
+        "No previous placeholder or old logo is visible in the hero section"
+      ]
+    }
+  ],
+  "constraints": [
+    "Use IMG-20260121-WA0003-1.jpg (no white background version), not IMG-20260121-WA0003.jpg"
+  ],
+  "nonGoals": [
+    "Changing any other section of the home page",
+    "Modifying the Layout header logo separately",
+    "Any backend changes"
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": [
+      "Remove white background to make it fully transparent, preserving the circular emblem shape (IMG-20260121-WA0003-1.jpg > logo-emblem.dim_512x512.png)"
+    ]
+  }
+}
