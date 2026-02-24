@@ -5,11 +5,18 @@ import Text "mo:core/Text";
 import Iter "mo:core/Iter";
 import Principal "mo:core/Principal";
 import Runtime "mo:core/Runtime";
+import Char "mo:core/Char";
+import Nat8 "mo:core/Nat8";
+import Nat32 "mo:core/Nat32";
+import Nat "mo:core/Nat";
 import Storage "blob-storage/Storage";
 import MixinStorage "blob-storage/Mixin";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
+import List "mo:core/List";
+import Migration "migration";
 
+(with migration = Migration.run)
 actor {
   include MixinStorage();
 
@@ -20,13 +27,15 @@ actor {
     name : Text;
   };
 
-  type AdmissionFormCandidate = {
+  type Candidate = {
     fullName : Text;
+    fatherName : Text;
     dateOfBirth : Text;
     mobile : Text;
     lastQualification : Text;
     address : Text;
     createdAt : Nat;
+    admissionID : Text;
     photo : ?Storage.ExternalBlob;
   };
 
@@ -41,18 +50,121 @@ actor {
     createdAt : Nat;
   };
 
-  module AdmissionFormCandidate {
-    public func compare(candidate1 : AdmissionFormCandidate, candidate2 : AdmissionFormCandidate) : Order.Order {
+  module Candidate {
+    public func compare(candidate1 : Candidate, candidate2 : Candidate) : Order.Order {
       Text.compare(candidate1.fullName, candidate2.fullName);
     };
   };
 
   let userProfiles = Map.empty<Principal, UserProfile>();
-  let candidates = Map.empty<Principal, AdmissionFormCandidate>();
+  let candidates = Map.empty<Text, Candidate>();
   let gallery = Map.empty<Text, GalleryItem>();
   let newsItems = Map.empty<Text, NewsItem>();
 
-  // User profile management
+  let admins = List.empty<Principal>();
+  var superAdmin : ?Principal = null;
+
+  // Admin management
+  type AdminResponse = {
+    principal : Principal;
+    isSuperAdmin : Bool;
+  };
+
+  public shared ({ caller }) func initializeSuperAdmin() : async Bool {
+    if (caller.isAnonymous()) {
+      Runtime.trap("Anonymous principals cannot be super admin");
+    };
+    if (superAdmin == null) {
+      superAdmin := ?caller;
+      admins.add(caller);
+      true;
+    } else {
+      false;
+    };
+  };
+
+  public shared ({ caller }) func addAdmin(newAdmin : Principal) : async Bool {
+    if (caller.isAnonymous()) {
+      Runtime.trap("Unauthorized: Anonymous principals cannot add admins");
+    };
+    if (newAdmin.isAnonymous()) {
+      Runtime.trap("Cannot add anonymous principal as admin");
+    };
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
+      Runtime.trap("Unauthorized: Only admins can add other admins");
+    };
+    if (contains(admins.values(), newAdmin)) {
+      false;
+    } else {
+      admins.add(newAdmin);
+      AccessControl.assignRole(accessControlState, caller, newAdmin, #admin);
+      true;
+    };
+  };
+
+  public shared ({ caller }) func removeAdmin(adminToRemove : Principal) : async Bool {
+    if (caller.isAnonymous()) {
+      Runtime.trap("Unauthorized: Anonymous principals cannot remove admins");
+    };
+    if (not isSuperAdmin(caller)) {
+      Runtime.trap("Unauthorized: Only super admin can remove admins");
+    };
+    if (isSuperAdmin(adminToRemove)) {
+      false;
+    } else {
+      let newAdmins = admins.filter(func(existing) { existing != adminToRemove });
+      admins.clear();
+      admins.addAll(newAdmins.values());
+      AccessControl.assignRole(accessControlState, caller, adminToRemove, #user);
+      true;
+    };
+  };
+
+  public query ({ caller }) func getAdmins() : async [AdminResponse] {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
+      Runtime.trap("Unauthorized: Only admins can view the admin list");
+    };
+    admins.toArray().map(
+      func(admin) {
+        {
+          principal = admin;
+          isSuperAdmin = superAdmin == ?admin;
+        };
+      }
+    );
+  };
+
+  public shared ({ caller }) func resetAdminSystemForce() : async () {
+    if (caller.isAnonymous()) {
+      Runtime.trap("Unauthorized: Anonymous principals cannot reset the system");
+    };
+    if (not ((admins.isEmpty() and superAdmin == null) or isSuperAdmin(caller))) {
+      Runtime.trap("Unauthorized: Only super admin can reset the system");
+    };
+    admins.clear();
+    superAdmin := ?caller;
+    admins.add(caller);
+  };
+
+  func contains(iter : Iter.Iter<Principal>, value : Principal) : Bool {
+    for (item in iter) {
+      if (item == value) {
+        return true;
+      };
+    };
+    false;
+  };
+
+  func isSuperAdmin(caller : Principal) : Bool {
+    if (caller.isAnonymous()) {
+      return false;
+    };
+    switch (superAdmin) {
+      case (null) { false };
+      case (?admin) { caller == admin };
+    };
+  };
+
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can access profiles");
@@ -74,37 +186,55 @@ actor {
     userProfiles.add(caller, profile);
   };
 
-  // Admission form management
-  public shared ({ caller }) func submitAdmissionForm(
+  public func submitAdmissionForm(
     fullName : Text,
+    fatherName : Text,
     dateOfBirth : Text,
     mobile : Text,
     lastQualification : Text,
     address : Text,
     photo : ?Storage.ExternalBlob,
   ) : async () {
-    let candidate : AdmissionFormCandidate = {
+    // Generate admission ID dynamically on each call
+    let currentYear = 2023; // Placeholder for actual year retrieval
+    let serialString = debug_show (candidates.size() + 1);
+
+    func zeroPad(text : Text) : Text {
+      let textChars = text.toArray();
+      let charCount = textChars.size();
+      let padCount = 5 - charCount.toNat();
+      let zeros = Array.tabulate(padCount, func(_) { '0' });
+      let paddedChars = zeros.concat(textChars);
+      Text.fromArray(paddedChars);
+    };
+
+    let paddedSerial = zeroPad(serialString);
+    let admissionID = currentYear.toText().concat("0").concat(paddedSerial);
+
+    let candidate : Candidate = {
       fullName;
+      fatherName;
       dateOfBirth;
       mobile;
       lastQualification;
       address;
       createdAt = 0;
+      admissionID;
       photo;
     };
-    candidates.add(caller, candidate);
+
+    candidates.add(admissionID, candidate);
   };
 
-  public query ({ caller }) func getAllCandidates() : async [AdmissionFormCandidate] {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+  public query ({ caller }) func getAllCandidates() : async [Candidate] {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
       Runtime.trap("Unauthorized: Only admins can view all candidates");
     };
     candidates.values().toArray().sort();
   };
 
-  // Gallery management
   public shared ({ caller }) func addGalleryItem(image : Storage.ExternalBlob, description : Text) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
       Runtime.trap("Unauthorized: Only admins can add gallery items");
     };
     let item : GalleryItem = {
@@ -119,15 +249,14 @@ actor {
   };
 
   public shared ({ caller }) func deleteGalleryItem(description : Text) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
       Runtime.trap("Unauthorized: Only admins can delete gallery items");
     };
     gallery.remove(description);
   };
 
-  // News management
   public shared ({ caller }) func createNewsItem(title : Text, content : Text, createdAt : Nat) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
       Runtime.trap("Unauthorized: Only admins can create news items");
     };
     let newsItem : NewsItem = {
@@ -139,7 +268,7 @@ actor {
   };
 
   public shared ({ caller }) func editNewsItem(title : Text, content : Text, createdAt : Nat) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
       Runtime.trap("Unauthorized: Only admins can edit news items");
     };
     let newsItem : NewsItem = {
@@ -151,7 +280,7 @@ actor {
   };
 
   public shared ({ caller }) func deleteNewsItem(title : Text) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
       Runtime.trap("Unauthorized: Only admins can delete news items");
     };
     newsItems.remove(title);
@@ -161,3 +290,4 @@ actor {
     newsItems.values().toArray();
   };
 };
+

@@ -1,13 +1,13 @@
 # Specification
 
 ## Summary
-**Goal:** Build a website for Karani Sena Yuva Shakti organization with public-facing pages and an admin panel for managing content and admission submissions.
+**Goal:** Make the admission form publicly accessible, add father's name field, generate unique admission IDs, and create printable admission cards.
 
 **Planned changes:**
-- Create home page with hero section, photo gallery, and news/messages section
-- Build admission form page with candidate details and photo upload
-- Implement admin panel protected by Internet Identity authentication
-- Add admin functionality to manage admission submissions, gallery photos, and news posts
-- Design with warm, traditional color scheme (saffron, deep red, gold accents)
+- Remove authentication requirement from admission form submission
+- Add "Father's Name" field to candidate records and form
+- Generate unique 10-character admission IDs in format YYYY0-XXXXX for each submission
+- Display printable admission card immediately after successful form submission
+- Show unique admission IDs in admin panel submissions list
 
-**User-visible outcome:** Users can view organization information, browse photo gallery, read news updates, and submit admission forms with their photo. Admins can securely log in to manage all content and review submissions.
+**User-visible outcome:** Anyone can submit admission forms without logging in. After submission, they receive a printable admission card showing their unique ID, personal details, and photo. Admins can view the unique ID for each submission in the admin panel.

@@ -5,21 +5,25 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import ImageUploadField from '../components/ImageUploadField';
+import AdmissionCard from '../components/AdmissionCard';
 import { useSubmitAdmissionForm } from '../hooks/useSubmitAdmissionForm';
 import { ExternalBlob } from '../backend';
 import { toast } from 'sonner';
-import { CheckCircle2 } from 'lucide-react';
 
 export default function AdmissionFormPage() {
   const [formData, setFormData] = useState({
     fullName: '',
+    fatherName: '',
     dateOfBirth: '',
     mobile: '',
     lastQualification: '',
     address: '',
   });
   const [photo, setPhoto] = useState<ExternalBlob | null>(null);
-  const [submitted, setSubmitted] = useState(false);
+  const [submissionData, setSubmissionData] = useState<{
+    admissionID: string;
+    submittedDate: Date;
+  } | null>(null);
 
   const { mutate: submitForm, isPending } = useSubmitAdmissionForm();
 
@@ -33,7 +37,7 @@ export default function AdmissionFormPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.fullName || !formData.dateOfBirth || !formData.mobile || !formData.address) {
+    if (!formData.fullName || !formData.fatherName || !formData.dateOfBirth || !formData.mobile || !formData.address) {
       toast.error('Please fill in all required fields');
       return;
     }
@@ -41,6 +45,7 @@ export default function AdmissionFormPage() {
     submitForm(
       {
         fullName: formData.fullName,
+        fatherName: formData.fatherName,
         dateOfBirth: formData.dateOfBirth,
         mobile: formData.mobile,
         lastQualification: formData.lastQualification,
@@ -48,17 +53,12 @@ export default function AdmissionFormPage() {
         photo,
       },
       {
-        onSuccess: () => {
+        onSuccess: (admissionID) => {
           toast.success('Application submitted successfully!');
-          setSubmitted(true);
-          setFormData({
-            fullName: '',
-            dateOfBirth: '',
-            mobile: '',
-            lastQualification: '',
-            address: '',
+          setSubmissionData({
+            admissionID,
+            submittedDate: new Date(),
           });
-          setPhoto(null);
         },
         onError: (error) => {
           toast.error('Failed to submit application: ' + error.message);
@@ -67,21 +67,37 @@ export default function AdmissionFormPage() {
     );
   };
 
-  if (submitted) {
+  const handleNewApplication = () => {
+    setSubmissionData(null);
+    setFormData({
+      fullName: '',
+      fatherName: '',
+      dateOfBirth: '',
+      mobile: '',
+      lastQualification: '',
+      address: '',
+    });
+    setPhoto(null);
+  };
+
+  if (submissionData) {
     return (
       <div className="container py-16">
-        <div className="max-w-2xl mx-auto text-center space-y-6">
-          <div className="flex justify-center">
-            <div className="rounded-full bg-primary/10 p-6">
-              <CheckCircle2 className="h-16 w-16 text-primary" />
-            </div>
+        <div className="max-w-4xl mx-auto">
+          <AdmissionCard
+            admissionID={submissionData.admissionID}
+            fullName={formData.fullName}
+            fatherName={formData.fatherName}
+            dateOfBirth={formData.dateOfBirth}
+            mobile={formData.mobile}
+            photo={photo}
+            submittedDate={submissionData.submittedDate}
+          />
+          <div className="text-center mt-8 print:hidden">
+            <Button onClick={handleNewApplication} variant="outline" size="lg">
+              Submit Another Application
+            </Button>
           </div>
-          <h1 className="text-3xl font-bold">Application Submitted!</h1>
-          <p className="text-muted-foreground">
-            Thank you for your interest in Karani Sena Yuva Shakti. We have received your application and will
-            review it shortly.
-          </p>
-          <Button onClick={() => setSubmitted(false)}>Submit Another Application</Button>
         </div>
       </div>
     );
@@ -109,6 +125,21 @@ export default function AdmissionFormPage() {
                   value={formData.fullName}
                   onChange={handleChange}
                   placeholder="Enter your full name"
+                  disabled={isPending}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="fatherName">
+                  Father's Name <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="fatherName"
+                  name="fatherName"
+                  value={formData.fatherName}
+                  onChange={handleChange}
+                  placeholder="Enter your father's name"
                   disabled={isPending}
                   required
                 />
@@ -190,4 +221,3 @@ export default function AdmissionFormPage() {
     </div>
   );
 }
-

@@ -25,12 +25,18 @@ export const UserRole = IDL.Variant({
   'user' : IDL.Null,
   'guest' : IDL.Null,
 });
-export const AdmissionFormCandidate = IDL.Record({
+export const AdminResponse = IDL.Record({
+  'principal' : IDL.Principal,
+  'isSuperAdmin' : IDL.Bool,
+});
+export const Candidate = IDL.Record({
   'lastQualification' : IDL.Text,
   'dateOfBirth' : IDL.Text,
   'createdAt' : IDL.Nat,
   'fullName' : IDL.Text,
+  'fatherName' : IDL.Text,
   'address' : IDL.Text,
+  'admissionID' : IDL.Text,
   'mobile' : IDL.Text,
   'photo' : IDL.Opt(ExternalBlob),
 });
@@ -73,17 +79,15 @@ export const idlService = IDL.Service({
     ),
   '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+  'addAdmin' : IDL.Func([IDL.Principal], [IDL.Bool], []),
   'addGalleryItem' : IDL.Func([ExternalBlob, IDL.Text], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'createNewsItem' : IDL.Func([IDL.Text, IDL.Text, IDL.Nat], [], []),
   'deleteGalleryItem' : IDL.Func([IDL.Text], [], []),
   'deleteNewsItem' : IDL.Func([IDL.Text], [], []),
   'editNewsItem' : IDL.Func([IDL.Text, IDL.Text, IDL.Nat], [], []),
-  'getAllCandidates' : IDL.Func(
-      [],
-      [IDL.Vec(AdmissionFormCandidate)],
-      ['query'],
-    ),
+  'getAdmins' : IDL.Func([], [IDL.Vec(AdminResponse)], ['query']),
+  'getAllCandidates' : IDL.Func([], [IDL.Vec(Candidate)], ['query']),
   'getAllNewsItems' : IDL.Func([], [IDL.Vec(NewsItem)], ['query']),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
@@ -93,10 +97,21 @@ export const idlService = IDL.Service({
       [IDL.Opt(UserProfile)],
       ['query'],
     ),
+  'initializeSuperAdmin' : IDL.Func([], [IDL.Bool], []),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+  'removeAdmin' : IDL.Func([IDL.Principal], [IDL.Bool], []),
+  'resetAdminSystemForce' : IDL.Func([], [], []),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
   'submitAdmissionForm' : IDL.Func(
-      [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Opt(ExternalBlob)],
+      [
+        IDL.Text,
+        IDL.Text,
+        IDL.Text,
+        IDL.Text,
+        IDL.Text,
+        IDL.Text,
+        IDL.Opt(ExternalBlob),
+      ],
       [],
       [],
     ),
@@ -122,12 +137,18 @@ export const idlFactory = ({ IDL }) => {
     'user' : IDL.Null,
     'guest' : IDL.Null,
   });
-  const AdmissionFormCandidate = IDL.Record({
+  const AdminResponse = IDL.Record({
+    'principal' : IDL.Principal,
+    'isSuperAdmin' : IDL.Bool,
+  });
+  const Candidate = IDL.Record({
     'lastQualification' : IDL.Text,
     'dateOfBirth' : IDL.Text,
     'createdAt' : IDL.Nat,
     'fullName' : IDL.Text,
+    'fatherName' : IDL.Text,
     'address' : IDL.Text,
+    'admissionID' : IDL.Text,
     'mobile' : IDL.Text,
     'photo' : IDL.Opt(ExternalBlob),
   });
@@ -170,17 +191,15 @@ export const idlFactory = ({ IDL }) => {
       ),
     '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+    'addAdmin' : IDL.Func([IDL.Principal], [IDL.Bool], []),
     'addGalleryItem' : IDL.Func([ExternalBlob, IDL.Text], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'createNewsItem' : IDL.Func([IDL.Text, IDL.Text, IDL.Nat], [], []),
     'deleteGalleryItem' : IDL.Func([IDL.Text], [], []),
     'deleteNewsItem' : IDL.Func([IDL.Text], [], []),
     'editNewsItem' : IDL.Func([IDL.Text, IDL.Text, IDL.Nat], [], []),
-    'getAllCandidates' : IDL.Func(
-        [],
-        [IDL.Vec(AdmissionFormCandidate)],
-        ['query'],
-      ),
+    'getAdmins' : IDL.Func([], [IDL.Vec(AdminResponse)], ['query']),
+    'getAllCandidates' : IDL.Func([], [IDL.Vec(Candidate)], ['query']),
     'getAllNewsItems' : IDL.Func([], [IDL.Vec(NewsItem)], ['query']),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
@@ -190,10 +209,14 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Opt(UserProfile)],
         ['query'],
       ),
+    'initializeSuperAdmin' : IDL.Func([], [IDL.Bool], []),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+    'removeAdmin' : IDL.Func([IDL.Principal], [IDL.Bool], []),
+    'resetAdminSystemForce' : IDL.Func([], [], []),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
     'submitAdmissionForm' : IDL.Func(
         [
+          IDL.Text,
           IDL.Text,
           IDL.Text,
           IDL.Text,

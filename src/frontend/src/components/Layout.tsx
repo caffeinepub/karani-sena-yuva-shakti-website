@@ -3,26 +3,14 @@ import { Button } from '@/components/ui/button';
 import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
-import { useQuery } from '@tanstack/react-query';
-import { useActor } from '../hooks/useActor';
 
 export default function Layout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { identity, clear, login, loginStatus } = useInternetIdentity();
-  const { actor } = useActor();
   const navigate = useNavigate();
 
   const isAuthenticated = !!identity;
   const isLoggingIn = loginStatus === 'logging-in';
-
-  const { data: isAdmin } = useQuery({
-    queryKey: ['isAdmin'],
-    queryFn: async () => {
-      if (!actor || !isAuthenticated) return false;
-      return actor.isCallerAdmin();
-    },
-    enabled: !!actor && isAuthenticated,
-  });
 
   const handleAuth = async () => {
     if (isAuthenticated) {
@@ -58,9 +46,9 @@ export default function Layout() {
             <Link to="/admission" className="text-sm font-medium transition-colors hover:text-primary">
               Admission Form
             </Link>
-            {isAdmin && (
+            {isAuthenticated && (
               <Link to="/admin" className="text-sm font-medium transition-colors hover:text-primary">
-                Admin Panel
+                Admin
               </Link>
             )}
             <Button
@@ -101,13 +89,13 @@ export default function Layout() {
               >
                 Admission Form
               </Link>
-              {isAdmin && (
+              {isAuthenticated && (
                 <Link
                   to="/admin"
                   className="text-sm font-medium transition-colors hover:text-primary py-2"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Admin Panel
+                  Admin
                 </Link>
               )}
               <Button
@@ -154,4 +142,3 @@ export default function Layout() {
     </div>
   );
 }
-

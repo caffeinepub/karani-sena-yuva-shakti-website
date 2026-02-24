@@ -1,18 +1,18 @@
 import { useQuery } from '@tanstack/react-query';
 import { useActor } from './useActor';
-import { Candidate } from '../backend';
 import { useInternetIdentity } from './useInternetIdentity';
 
-export function useGetAllCandidates() {
+export function useIsCallerAdmin() {
   const { actor, isFetching: actorFetching } = useActor();
   const { identity } = useInternetIdentity();
 
-  return useQuery<Candidate[]>({
-    queryKey: ['candidates'],
+  return useQuery<boolean>({
+    queryKey: ['isCallerAdmin'],
     queryFn: async () => {
-      if (!actor) return [];
-      return actor.getAllCandidates();
+      if (!actor) return false;
+      return actor.isCallerAdmin();
     },
     enabled: !!actor && !!identity && !actorFetching,
+    retry: false,
   });
 }

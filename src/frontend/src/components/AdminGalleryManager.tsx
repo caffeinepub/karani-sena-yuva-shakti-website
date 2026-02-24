@@ -2,14 +2,17 @@ import { useState } from 'react';
 import { useGetGalleryItems } from '../hooks/useGetGalleryItems';
 import { useAddGalleryItem } from '../hooks/useAddGalleryItem';
 import { useDeleteGalleryItem } from '../hooks/useDeleteGalleryItem';
+import { useIsCallerAdmin } from '../hooks/useIsCallerAdmin';
+import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import ImageUploadField from './ImageUploadField';
 import { ExternalBlob } from '../backend';
 import { toast } from 'sonner';
-import { Trash2, Plus } from 'lucide-react';
+import { Trash2, Plus, AlertCircle } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   AlertDialog,
@@ -27,6 +30,8 @@ export default function AdminGalleryManager() {
   const { data: galleryItems, isLoading } = useGetGalleryItems();
   const { mutate: addItem, isPending: isAdding } = useAddGalleryItem();
   const { mutate: deleteItem, isPending: isDeleting } = useDeleteGalleryItem();
+  const { data: isAdmin, isLoading: isCheckingAdmin } = useIsCallerAdmin();
+  const { identity } = useInternetIdentity();
 
   const [newImage, setNewImage] = useState<ExternalBlob | null>(null);
   const [description, setDescription] = useState('');
@@ -50,7 +55,14 @@ export default function AdminGalleryManager() {
           setDescription('');
         },
         onError: (error) => {
-          toast.error('Failed to add photo: ' + error.message);
+          console.error('Gallery upload error:', error);
+          const errorMessage = error.message || 'Unknown error';
+          
+          if (errorMessage.includes('Unauthorized') || errorMessage.includes('Only admins')) {
+            toast.error('Authorization error: You must be an admin to upload photos. Please contact the super admin.');
+          } else {
+            toast.error('Failed to add photo: ' + errorMessage);
+          }
         },
       }
     );
@@ -62,10 +74,56 @@ export default function AdminGalleryManager() {
         toast.success('Photo deleted from gallery');
       },
       onError: (error) => {
-        toast.error('Failed to delete photo: ' + error.message);
+        console.error('Gallery delete error:', error);
+        const errorMessage = error.message || 'Unknown error';
+        
+        if (errorMessage.includes('Unauthorized') || errorMessage.includes('Only admins')) {
+          toast.error('Authorization error: You must be an admin to delete photos.');
+        } else {
+          toast.error('Failed to delete photo: ' + errorMessage);
+        }
       },
     });
   };
+
+  // Show loading state while checking admin status
+  if (isCheckingAdmin) {
+    return (
+      <div className="space-y-6">
+        <Card>
+          <CardContent className="py-8">
+            <div className="flex items-center justify-center">
+              <Skeleton className="h-8 w-48" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // Show warning if not authenticated
+  if (!identity) {
+    return (
+      <Alert variant="destructive">
+        <AlertCircle className="h-4 w-4" />
+        <AlertDescription>
+          You must be logged in to manage the gallery.
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
+  // Show warning if not admin
+  if (isAdmin === false) {
+    return (
+      <Alert variant="destructive">
+        <AlertCircle className="h-4 w-4" />
+        <AlertDescription>
+          You do not have admin permissions. Please contact the super admin to grant you access.
+        </AlertDescription>
+      </Alert>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -160,4 +218,3 @@ export default function AdminGalleryManager() {
     </div>
   );
 }
-

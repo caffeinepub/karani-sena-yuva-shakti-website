@@ -10,12 +10,18 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
-export interface AdmissionFormCandidate {
+export interface AdminResponse {
+  'principal' : Principal,
+  'isSuperAdmin' : boolean,
+}
+export interface Candidate {
   'lastQualification' : string,
   'dateOfBirth' : string,
   'createdAt' : bigint,
   'fullName' : string,
+  'fatherName' : string,
   'address' : string,
+  'admissionID' : string,
   'mobile' : string,
   'photo' : [] | [ExternalBlob],
 }
@@ -58,22 +64,27 @@ export interface _SERVICE {
   >,
   '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
+  'addAdmin' : ActorMethod<[Principal], boolean>,
   'addGalleryItem' : ActorMethod<[ExternalBlob, string], undefined>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'createNewsItem' : ActorMethod<[string, string, bigint], undefined>,
   'deleteGalleryItem' : ActorMethod<[string], undefined>,
   'deleteNewsItem' : ActorMethod<[string], undefined>,
   'editNewsItem' : ActorMethod<[string, string, bigint], undefined>,
-  'getAllCandidates' : ActorMethod<[], Array<AdmissionFormCandidate>>,
+  'getAdmins' : ActorMethod<[], Array<AdminResponse>>,
+  'getAllCandidates' : ActorMethod<[], Array<Candidate>>,
   'getAllNewsItems' : ActorMethod<[], Array<NewsItem>>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getGalleryItems' : ActorMethod<[], Array<GalleryItem>>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
+  'initializeSuperAdmin' : ActorMethod<[], boolean>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
+  'removeAdmin' : ActorMethod<[Principal], boolean>,
+  'resetAdminSystemForce' : ActorMethod<[], undefined>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
   'submitAdmissionForm' : ActorMethod<
-    [string, string, string, string, string, [] | [ExternalBlob]],
+    [string, string, string, string, string, string, [] | [ExternalBlob]],
     undefined
   >,
 }

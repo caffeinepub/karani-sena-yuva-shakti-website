@@ -2,11 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-create-a-home-page-with-a-hero-section-displaying-the-organization-logo-and-name-karani-sena-yuva-shakti",
-      "featureTitle": "Create a home page with a hero section displaying the organization logo and name 'Karani Sena Yuva Shakti'",
+      "featureId": "feature-update-the-frontend-admission-form-page-to-include-a-father-s-name-text-input-field-positioned-immediately-after-the-full-name-field-with-appropriate-validation-requiring-this-field-to-be-filled-before-submission",
+      "featureTitle": "Update the frontend admission form page to include a 'Father's Name' text input field positioned immediately after the 'Full Name' field, with appropriate validation requiring this field to be filled before submission",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/pages/HomePage.tsx"
+        "frontend/src/pages/AdmissionFormPage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -18,57 +17,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-1"
+        "REQ-25"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-implement-a-photo-gallery-section-on-the-home-page-that-displays-multiple-photos-uploaded-by-admins",
-      "featureTitle": "Implement a photo gallery section on the home page that displays multiple photos uploaded by admins",
+      "featureId": "feature-create-a-printable-admission-card-component-that-displays-immediately-after-successful-form-submission-showing-the-candidate-s-generated-unique-id-full-name-father-s-name-date-of-birth-mobile-number-uploaded-photo-and-submission-date-in-a-card-style-layout-optimized-for-printing",
+      "featureTitle": "Create a printable admission card component that displays immediately after successful form submission, showing the candidate's generated unique ID, full name, father's name, date of birth, mobile number, uploaded photo, and submission date in a card-style layout optimized for printing",
       "files": [
-        "frontend/src/components/GallerySection.tsx",
-        "frontend/src/pages/HomePage.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-2"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-an-organization-news-and-messages-section-on-the-home-page-that-displays-posts-created-by-admins",
-      "featureTitle": "Add an organization news and messages section on the home page that displays posts created by admins",
-      "files": [
-        "frontend/src/components/NewsSection.tsx",
-        "frontend/src/pages/HomePage.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-3"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-create-an-admission-form-page-with-fields-for-full-name-complete-address-email-date-of-birth-and-mobile-number",
-      "featureTitle": "Create an admission form page with fields for: full name, complete address, email, date of birth, and mobile number",
-      "files": [
-        "frontend/src/App.tsx",
+        "frontend/src/components/AdmissionCard.tsx",
         "frontend/src/hooks/useSubmitAdmissionForm.ts",
         "frontend/src/pages/AdmissionFormPage.tsx"
       ],
@@ -82,16 +39,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-4"
+        "REQ-26"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-a-photo-upload-field-to-the-admission-form-where-candidates-can-upload-their-own-photo",
-      "featureTitle": "Add a photo upload field to the admission form where candidates can upload their own photo",
+      "featureId": "feature-update-the-admin-panel-s-view-submissions-section-to-display-the-unique-admission-id-for-each-candidate-submission-in-the-accordion-list-view",
+      "featureTitle": "Update the admin panel's 'View Submissions' section to display the unique admission ID for each candidate submission in the accordion list view",
       "files": [
-        "frontend/src/components/ImageUploadField.tsx",
-        "frontend/src/pages/AdmissionFormPage.tsx"
+        "frontend/src/components/AdminCandidatesList.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -103,125 +59,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-5"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-create-an-admin-panel-protected-by-internet-identity-authentication-that-allows-admins-to-log-in-securely",
-      "featureTitle": "Create an admin panel protected by Internet Identity authentication that allows admins to log in securely",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/AccessDeniedScreen.tsx",
-        "frontend/src/components/ProfileSetupModal.tsx",
-        "frontend/src/components/ProtectedRoute.tsx",
-        "frontend/src/hooks/useGetCallerUserProfile.ts",
-        "frontend/src/hooks/useSaveCallerUserProfile.ts",
-        "frontend/src/pages/AdminPanel.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-7"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-implement-admin-functionality-to-view-and-manage-all-admission-form-submissions-in-the-admin-panel",
-      "featureTitle": "Implement admin functionality to view and manage all admission form submissions in the admin panel",
-      "files": [
-        "frontend/src/components/AdminCandidatesList.tsx",
-        "frontend/src/hooks/useGetAllCandidates.ts",
-        "frontend/src/pages/AdminPanel.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-8"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-admin-functionality-to-upload-view-and-delete-multiple-photos-for-the-home-page-gallery",
-      "featureTitle": "Add admin functionality to upload, view, and delete multiple photos for the home page gallery",
-      "files": [
-        "frontend/src/components/AdminGalleryManager.tsx",
-        "frontend/src/hooks/useAddGalleryItem.ts",
-        "frontend/src/hooks/useDeleteGalleryItem.ts",
-        "frontend/src/pages/AdminPanel.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-9"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-implement-admin-functionality-to-create-edit-and-delete-organization-news-and-message-posts",
-      "featureTitle": "Implement admin functionality to create, edit, and delete organization news and message posts",
-      "files": [
-        "frontend/src/components/AdminNewsManager.tsx",
-        "frontend/src/hooks/useCreateNewsItem.ts",
-        "frontend/src/hooks/useDeleteNewsItem.ts",
-        "frontend/src/hooks/useEditNewsItem.ts",
-        "frontend/src/pages/AdminPanel.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-10"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-design-the-website-with-a-visually-cohesive-theme-using-warm-traditional-colors-saffron-deep-red-gold-accents-with-clean-typography-and-culturally-respectful-layout-patterns-appropriate-for-a-youth-organization",
-      "featureTitle": "Design the website with a visually cohesive theme using warm, traditional colors (saffron, deep red, gold accents) with clean typography and culturally respectful layout patterns appropriate for a youth organization",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/Layout.tsx",
-        "frontend/src/index.css",
-        "frontend/tailwind.config.js"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-11"
+        "REQ-27"
       ],
       "confidence": "high"
     }

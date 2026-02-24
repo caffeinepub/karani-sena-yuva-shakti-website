@@ -1,304 +1,70 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Karani Sena Yuva Shakti Organization Website - Frontend Implementation",
+  "title": "Implement public admission form with father's name field, unique ID generation, and printable admission card",
   "requirements": [
     {
-      "id": "REQ-1",
-      "summary": "Create home page with hero section displaying organization logo and name",
+      "id": "REQ-25",
+      "summary": "Add Father's Name field to admission form after Full Name field with required validation",
       "acceptanceCriteria": [
-        "Hero section is prominently displayed at the top of the home page",
-        "Organization logo is clearly visible in the hero section",
-        "Organization name 'Karani Sena Yuva Shakti' is displayed alongside the logo"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/HomePage.tsx",
-          "operation": "create",
-          "description": "Create home page with hero section that displays the organization logo (frontend/public/assets/generated/ksys-logo.dim_400x400.png) and name 'Karani Sena Yuva Shakti' over a hero background (frontend/public/assets/generated/hero-bg.dim_1920x600.png). Include sections for news and gallery that will be populated by other requirements."
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Add route for HomePage at root path '/'. Set HomePage as the default landing page for the application."
-        }
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "summary": "Implement photo gallery section on home page displaying admin-uploaded photos",
-      "acceptanceCriteria": [
-        "Gallery displays all photos uploaded by admins",
-        "Photos are arranged in a responsive grid or carousel layout",
-        "Gallery is visually integrated into the home page design"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/GallerySection.tsx",
-          "operation": "create",
-          "description": "Create gallery section component that fetches and displays gallery items from backend using getGalleryItems(). Use the blob-storage component to display ExternalBlob images via getDirectURL() for optimal streaming and caching. Render photos in a responsive grid layout with descriptions."
-        },
-        {
-          "path": "frontend/src/hooks/useGalleryItems.ts",
-          "operation": "create",
-          "description": "Create React Query hook to fetch gallery items from backend using getGalleryItems() method. Handle loading and error states appropriately."
-        },
-        {
-          "path": "frontend/src/pages/HomePage.tsx",
-          "operation": "modify",
-          "description": "Import and integrate GallerySection component into the home page below the hero section."
-        }
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "summary": "Add organization news and messages section on home page displaying admin posts",
-      "acceptanceCriteria": [
-        "News section displays all published news posts",
-        "Each news post shows title and content",
-        "News posts are displayed in reverse chronological order (newest first)"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/NewsSection.tsx",
-          "operation": "create",
-          "description": "Create news section component that fetches and displays news items from backend using getAllNewsItems(). Display title, content, and formatted date for each post. Sort posts by createdAt in descending order (newest first)."
-        },
-        {
-          "path": "frontend/src/hooks/useNewsItems.ts",
-          "operation": "create",
-          "description": "Create React Query hook to fetch news items from backend using getAllNewsItems() method. Handle loading and error states appropriately."
-        },
-        {
-          "path": "frontend/src/pages/HomePage.tsx",
-          "operation": "modify",
-          "description": "Import and integrate NewsSection component into the home page below the gallery section."
-        }
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "summary": "Create admission form page with candidate information fields",
-      "acceptanceCriteria": [
-        "Form includes input fields for full name, complete address, email, date of birth, and mobile number",
-        "All fields have appropriate input types (text, email, date, tel)",
-        "Form has clear labels for each field",
-        "Form includes a submit button"
+        "The admission form displays a 'Father's Name' input field after the 'Full Name' field",
+        "The father's name field is required and validated before form submission",
+        "The father's name value is included in the submission payload sent to the backend"
       ],
       "file_operations": [
         {
           "path": "frontend/src/pages/AdmissionFormPage.tsx",
+          "operation": "modify",
+          "description": "Add a 'fatherName' text input field immediately after the 'fullName' field in the form. Include required validation that prevents form submission if the field is empty. Update the form state and submission payload to include the fatherName value when calling the backend submitAdmissionForm function."
+        }
+      ]
+    },
+    {
+      "id": "REQ-26",
+      "summary": "Create printable admission card component displaying candidate details and unique ID after successful submission",
+      "acceptanceCriteria": [
+        "After form submission, a printable admission card appears on screen",
+        "The card displays the unique 10-character admission ID prominently",
+        "The card includes all candidate details: full name, father's name, date of birth, mobile number, and uploaded photo",
+        "The card layout is styled for printing with appropriate dimensions and formatting",
+        "The card includes a print button that triggers the browser's print dialog"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/AdmissionCard.tsx",
           "operation": "create",
-          "description": "Create admission form page with form fields for full name (text), complete address (textarea), email (email), date of birth (date), mobile number (tel), and last qualification (text). Include form validation and submit button. On successful submission, call backend submitAdmissionForm() method and show success feedback."
+          "description": "Create a new component that renders a printable admission card. Display the unique admission ID (received from backend after submission), candidate's full name, father's name, date of birth, mobile number, uploaded photo (using ExternalBlob.getDirectURL()), and submission date. Style the card with a professional card-like layout optimized for printing (appropriate dimensions, borders, spacing). Include a print button that invokes window.print(). Use print-specific CSS media queries to hide the print button and optimize layout when printing."
+        },
+        {
+          "path": "frontend/src/pages/AdmissionFormPage.tsx",
+          "operation": "modify",
+          "description": "Update the success state handling to capture and store the unique admission ID returned by the backend after form submission. Import and conditionally render the AdmissionCard component when the form submission is successful, passing all candidate details (including the unique ID, full name, father's name, date of birth, mobile number, photo) and submission timestamp to the card component. Replace or enhance the existing success message display to show the admission card instead."
         },
         {
           "path": "frontend/src/hooks/useSubmitAdmissionForm.ts",
-          "operation": "create",
-          "description": "Create React Query mutation hook to submit admission form data to backend using submitAdmissionForm() method. Handle success and error states, including photo upload if provided."
+          "operation": "modify",
+          "description": "Update the mutation to return the unique admission ID from the backend response. Modify the return type and onSuccess callback to provide the generated admission ID to the calling component so it can be displayed in the admission card."
         },
         {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/src/backend.d.ts",
           "operation": "modify",
-          "description": "Add route for AdmissionFormPage at path '/admission'. Add navigation link to admission form in main navigation."
+          "description": "Update the submitAdmissionForm method signature to return Promise<string> instead of Promise<void>, reflecting that the backend now returns the generated unique admission ID. Note: This change aligns the type definition with the backend's new behavior of returning the admission ID."
         }
       ]
     },
     {
-      "id": "REQ-5",
-      "summary": "Add photo upload field to admission form for candidate photos",
+      "id": "REQ-27",
+      "summary": "Display unique admission ID in admin submissions list",
       "acceptanceCriteria": [
-        "Photo upload field accepts image files",
-        "Upload field has clear instructions for candidates",
-        "Preview of uploaded photo is shown before submission"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/AdmissionFormPage.tsx",
-          "operation": "modify",
-          "description": "Add photo upload input field with file type validation (accept image/*). Use the blob-storage component ExternalBlob.fromBytes() to convert uploaded file to ExternalBlob format. Implement preview functionality showing the selected image before submission. Include withUploadProgress() to display upload progress feedback to users."
-        },
-        {
-          "path": "frontend/src/components/ImageUploadField.tsx",
-          "operation": "create",
-          "description": "Create reusable image upload component with drag-and-drop support, file validation, preview display, and upload progress indication using ExternalBlob.withUploadProgress(). Verify the blob-storage component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "summary": "Create admin panel protected by Internet Identity authentication",
-      "acceptanceCriteria": [
-        "Admin panel is only accessible after Internet Identity authentication",
-        "Unauthenticated users are redirected to login",
-        "Admin panel has a logout option"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/AdminPanel.tsx",
-          "operation": "create",
-          "description": "Create admin panel page that uses the authorization component's authentication system. Check user authentication status using useInternetIdentity() hook and verify admin role using isCallerAdmin() backend method. Redirect unauthenticated users to login. Include logout functionality and serve as container for admin management sections. Verify the authorization component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/ProtectedRoute.tsx",
-          "operation": "create",
-          "description": "Create protected route wrapper component that uses the authorization component to guard admin-only routes. Check authentication status and admin role before rendering children. Show AccessDeniedScreen for unauthorized users."
-        },
-        {
-          "path": "frontend/src/components/AccessDeniedScreen.tsx",
-          "operation": "create",
-          "description": "Create access denied screen component to display when unauthorized users attempt to access admin-only pages. Include clear messaging and link to home page."
-        },
-        {
-          "path": "frontend/src/components/ProfileSetupModal.tsx",
-          "operation": "create",
-          "description": "Create profile setup modal that uses the authorization component to prompt new users for their name on first login. Use getCallerUserProfile() to check if profile exists and saveCallerUserProfile() to save new profile. Follow the component's pattern to prevent modal flash during actor initialization."
-        },
-        {
-          "path": "frontend/src/hooks/useGetCallerUserProfile.ts",
-          "operation": "create",
-          "description": "Create React Query hook following the authorization component's pattern to fetch current user profile using getCallerUserProfile(). Properly handle actor dependency to prevent profile setup modal flash."
-        },
-        {
-          "path": "frontend/src/hooks/useSaveCallerUserProfile.ts",
-          "operation": "create",
-          "description": "Create React Query mutation hook to save user profile using saveCallerUserProfile() method from the authorization component."
-        },
-        {
-          "path": "frontend/src/components/LoginButton.tsx",
-          "operation": "create",
-          "description": "Create login/logout button component following the authorization component's pattern. Use useInternetIdentity() hook for authentication state and actions. Clear query cache on logout to remove cached application data."
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Add protected route for AdminPanel at path '/admin' wrapped with ProtectedRoute component. Add ProfileSetupModal to app root to handle new user onboarding. Add LoginButton to main navigation."
-        }
-      ]
-    },
-    {
-      "id": "REQ-8",
-      "summary": "Implement admin functionality to view and manage admission form submissions",
-      "acceptanceCriteria": [
-        "Admin panel displays a list of all admission submissions",
-        "Each submission shows candidate name, contact details, date of birth, and photo",
-        "Admins can view full details of each submission"
+        "The admin submissions list displays the unique admission ID for each candidate",
+        "The unique ID is prominently visible in the candidate details view",
+        "Admins can easily identify and reference submissions by their unique ID"
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/AdminCandidatesList.tsx",
-          "operation": "create",
-          "description": "Create admin component to display all admission form submissions. Fetch candidates using getAllCandidates() backend method. Display candidate details including full name, address, email, date of birth, mobile, last qualification, and photo preview using ExternalBlob.getDirectURL(). Include expandable detail view for each submission."
-        },
-        {
-          "path": "frontend/src/hooks/useGetAllCandidates.ts",
-          "operation": "create",
-          "description": "Create React Query hook to fetch all admission candidates from backend using getAllCandidates() method. Only enable when user is authenticated as admin."
-        },
-        {
-          "path": "frontend/src/pages/AdminPanel.tsx",
           "operation": "modify",
-          "description": "Import and integrate AdminCandidatesList component into the admin panel as a tab or section."
-        }
-      ]
-    },
-    {
-      "id": "REQ-9",
-      "summary": "Add admin functionality to upload, view, and delete gallery photos",
-      "acceptanceCriteria": [
-        "Admin panel has an interface to upload new photos to the gallery",
-        "Admin can view all uploaded gallery photos",
-        "Admin can delete photos from the gallery",
-        "Gallery photos are stored in the backend"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/AdminGalleryManager.tsx",
-          "operation": "create",
-          "description": "Create admin component to manage gallery items. Display all gallery photos using getGalleryItems() with delete buttons. Include upload form using ImageUploadField component to add new photos with descriptions via addGalleryItem(). Use blob-storage component's ExternalBlob for image handling. Display images using getDirectURL() for optimal performance."
-        },
-        {
-          "path": "frontend/src/hooks/useAddGalleryItem.ts",
-          "operation": "create",
-          "description": "Create React Query mutation hook to add gallery items using addGalleryItem() backend method. Invalidate gallery query on success to refresh the list."
-        },
-        {
-          "path": "frontend/src/hooks/useDeleteGalleryItem.ts",
-          "operation": "create",
-          "description": "Create React Query mutation hook to delete gallery items using deleteGalleryItem() backend method. Invalidate gallery query on success to refresh the list."
-        },
-        {
-          "path": "frontend/src/pages/AdminPanel.tsx",
-          "operation": "modify",
-          "description": "Import and integrate AdminGalleryManager component into the admin panel as a tab or section."
-        }
-      ]
-    },
-    {
-      "id": "REQ-10",
-      "summary": "Implement admin functionality to create, edit, and delete news posts",
-      "acceptanceCriteria": [
-        "Admin panel has a form to create new news posts with title and content",
-        "Admin can edit existing news posts",
-        "Admin can delete news posts",
-        "News posts are stored in the backend and displayed on the home page"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/AdminNewsManager.tsx",
-          "operation": "create",
-          "description": "Create admin component to manage news items. Display all news posts using getAllNewsItems() with edit and delete buttons. Include form to create new posts using createNewsItem() and edit existing posts using editNewsItem(). Generate createdAt timestamps as bigint values."
-        },
-        {
-          "path": "frontend/src/hooks/useCreateNewsItem.ts",
-          "operation": "create",
-          "description": "Create React Query mutation hook to create news items using createNewsItem() backend method. Invalidate news query on success to refresh the list."
-        },
-        {
-          "path": "frontend/src/hooks/useEditNewsItem.ts",
-          "operation": "create",
-          "description": "Create React Query mutation hook to edit news items using editNewsItem() backend method. Invalidate news query on success to refresh the list."
-        },
-        {
-          "path": "frontend/src/hooks/useDeleteNewsItem.ts",
-          "operation": "create",
-          "description": "Create React Query mutation hook to delete news items using deleteNewsItem() backend method. Invalidate news query on success to refresh the list."
-        },
-        {
-          "path": "frontend/src/pages/AdminPanel.tsx",
-          "operation": "modify",
-          "description": "Import and integrate AdminNewsManager component into the admin panel as a tab or section."
-        }
-      ]
-    },
-    {
-      "id": "REQ-11",
-      "summary": "Design website with cohesive theme using warm traditional colors and clean typography",
-      "acceptanceCriteria": [
-        "Color scheme uses warm, traditional tones that reflect organizational values",
-        "Typography is readable and professional",
-        "Layout is clean and organized across all pages",
-        "Visual design is consistent throughout the application"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/index.css",
-          "operation": "modify",
-          "description": "Define global CSS custom properties for color scheme using saffron (#FF9933), deep red (#DC2626), and gold (#F59E0B) as primary colors. Set up warm accent colors and neutral backgrounds. Configure typography with clean, readable font families and appropriate sizing scales."
-        },
-        {
-          "path": "frontend/tailwind.config.js",
-          "operation": "modify",
-          "description": "Extend Tailwind theme with custom colors matching the traditional color palette: saffron, deep red, and gold. Configure custom spacing, border radius, and shadow values to create a cohesive, culturally respectful design system."
-        },
-        {
-          "path": "frontend/src/components/Layout.tsx",
-          "operation": "create",
-          "description": "Create main layout component with consistent header, navigation, and footer. Apply theme colors and typography. Include organization branding and navigation links to home, admission form, and admin panel (when authenticated). Use warm color scheme throughout."
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Wrap all routes with Layout component to ensure consistent design across all pages."
+          "description": "Update the candidate display to show the unique admission ID (candidate.admissionID) prominently in the accordion list. Display the admission ID in the accordion trigger alongside the candidate's name, or as the first field in the candidate details section within each accordion item. Style the admission ID to make it stand out (e.g., bold text, distinct color, or badge styling) so admins can easily identify and reference submissions."
         }
       ]
     }

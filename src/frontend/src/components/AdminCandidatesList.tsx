@@ -2,7 +2,7 @@ import { useGetAllCandidates } from '../hooks/useGetAllCandidates';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
-import { User, Phone, Mail, Calendar, MapPin, GraduationCap } from 'lucide-react';
+import { User, Phone, Calendar, MapPin, GraduationCap, IdCard, UserCircle } from 'lucide-react';
 import {
   Accordion,
   AccordionContent,
@@ -72,6 +72,11 @@ export default function AdminCandidatesList() {
                       </div>
                     )}
                     <div className="text-left">
+                      <div className="flex items-center gap-2 mb-1">
+                        <Badge variant="outline" className="font-mono text-xs">
+                          {candidate.admissionID}
+                        </Badge>
+                      </div>
                       <h3 className="font-semibold">{candidate.fullName}</h3>
                       <p className="text-sm text-muted-foreground">{candidate.mobile}</p>
                     </div>
@@ -80,7 +85,33 @@ export default function AdminCandidatesList() {
               </AccordionTrigger>
               <AccordionContent>
                 <CardContent className="pt-0 space-y-4">
+                  <div className="bg-primary/5 border border-primary/20 rounded-lg p-3 mb-4">
+                    <div className="flex items-center space-x-3">
+                      <IdCard className="h-5 w-5 text-primary" />
+                      <div>
+                        <p className="text-xs font-medium text-muted-foreground">Admission ID</p>
+                        <p className="text-lg font-bold text-primary font-mono">{candidate.admissionID}</p>
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="flex items-start space-x-3">
+                      <User className="h-5 w-5 text-muted-foreground mt-0.5" />
+                      <div>
+                        <p className="text-sm font-medium">Full Name</p>
+                        <p className="text-sm text-muted-foreground">{candidate.fullName}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start space-x-3">
+                      <UserCircle className="h-5 w-5 text-muted-foreground mt-0.5" />
+                      <div>
+                        <p className="text-sm font-medium">Father's Name</p>
+                        <p className="text-sm text-muted-foreground">{candidate.fatherName}</p>
+                      </div>
+                    </div>
+
                     <div className="flex items-start space-x-3">
                       <Calendar className="h-5 w-5 text-muted-foreground mt-0.5" />
                       <div>
@@ -135,4 +166,3 @@ export default function AdminCandidatesList() {
     </div>
   );
 }
-
