@@ -1,0 +1,211 @@
+{
+  "kind": "build_request",
+  "title": "Build Karani Sena Yuva Shakti organization website",
+  "projectName": "Karani Sena Yuva Shakti",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Create a home page with a hero section displaying the organization logo and name 'Karani Sena Yuva Shakti'",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2",
+          "msg-6"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Hero section is prominently displayed at the top of the home page",
+        "Organization logo is clearly visible in the hero section",
+        "Organization name 'Karani Sena Yuva Shakti' is displayed alongside the logo"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Implement a photo gallery section on the home page that displays multiple photos uploaded by admins",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2",
+          "msg-5",
+          "msg-6"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Gallery displays all photos uploaded by admins",
+        "Photos are arranged in a responsive grid or carousel layout",
+        "Gallery is visually integrated into the home page design"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Add an organization news and messages section on the home page that displays posts created by admins",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2",
+          "msg-6"
+        ]
+      },
+      "acceptanceCriteria": [
+        "News section displays all published news posts",
+        "Each news post shows title and content",
+        "News posts are displayed in reverse chronological order (newest first)"
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Create an admission form page with fields for: full name, complete address, email, date of birth, and mobile number",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2",
+          "msg-6"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Form includes input fields for full name, complete address, email, date of birth, and mobile number",
+        "All fields have appropriate input types (text, email, date, tel)",
+        "Form has clear labels for each field",
+        "Form includes a submit button"
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Add a photo upload field to the admission form where candidates can upload their own photo",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2",
+          "msg-4",
+          "msg-6"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Photo upload field accepts image files",
+        "Upload field has clear instructions for candidates",
+        "Preview of uploaded photo is shown before submission"
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "text": "Store all admission form submissions in the backend database, including candidate details and uploaded photo",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-2",
+          "msg-3",
+          "msg-6"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Backend stores full name, complete address, email, date of birth, mobile number, and photo for each submission",
+        "Each submission has a unique identifier",
+        "Photo data is stored as binary or reference"
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "text": "Create an admin panel protected by Internet Identity authentication that allows admins to log in securely",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2",
+          "msg-6"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Admin panel is only accessible after Internet Identity authentication",
+        "Unauthenticated users are redirected to login",
+        "Admin panel has a logout option"
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "text": "Implement admin functionality to view and manage all admission form submissions in the admin panel",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2",
+          "msg-6"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Admin panel displays a list of all admission submissions",
+        "Each submission shows candidate name, contact details, date of birth, and photo",
+        "Admins can view full details of each submission"
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "text": "Add admin functionality to upload, view, and delete multiple photos for the home page gallery",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2",
+          "msg-5",
+          "msg-6"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Admin panel has an interface to upload new photos to the gallery",
+        "Admin can view all uploaded gallery photos",
+        "Admin can delete photos from the gallery",
+        "Gallery photos are stored in the backend"
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "text": "Implement admin functionality to create, edit, and delete organization news and message posts",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2",
+          "msg-6"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Admin panel has a form to create new news posts with title and content",
+        "Admin can edit existing news posts",
+        "Admin can delete news posts",
+        "News posts are stored in the backend and displayed on the home page"
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "text": "Design the website with a visually cohesive theme using warm, traditional colors (saffron, deep red, gold accents) with clean typography and culturally respectful layout patterns appropriate for a youth organization",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2",
+          "msg-6"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Color scheme uses warm, traditional tones that reflect organizational values",
+        "Typography is readable and professional",
+        "Layout is clean and organized across all pages",
+        "Visual design is consistent throughout the application"
+      ]
+    }
+  ],
+  "constraints": [
+    "Admin panel must be protected with Internet Identity authentication",
+    "All admission form submissions must be stored in the backend database",
+    "Photo uploads must be handled securely for both admission forms and gallery"
+  ],
+  "nonGoals": [
+    "Email notifications for admission submissions",
+    "Export functionality for admission data",
+    "Video hosting or embedding",
+    "Multiple admin role management",
+    "Approval/rejection workflow for admissions"
+  ],
+  "imageRequirements": {
+    "required": [
+      "Karani Sena Yuva Shakti organization logo with traditional Indian youth organization emblems and saffron/red color scheme (ksys-logo.dim_400x400.png)",
+      "Hero background image with subtle traditional Indian patterns in warm tones (hero-bg.dim_1920x600.png)"
+    ],
+    "edits": []
+  }
+}

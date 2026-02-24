@@ -1,0 +1,128 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "Karani Sena Yuva Shakti organization website with home page (hero section with logo, admin-managed photo gallery, news section), admission form page (collects candidate details and photo), and Internet Identity-protected admin panel (manage submissions, gallery photos, and news posts)",
+  "architectural_notes": [
+    "Using Internet Identity for admin authentication",
+    "Backend database for storing admission form submissions",
+    "Photo upload functionality for both admissions and gallery",
+    "Admin panel for content management (submissions, photos, news)"
+  ],
+  "known_issues": [],
+  "isFixRequest": false,
+  "imageRequirements": "## Required Images\n- Karani Sena Yuva Shakti organization logo with traditional Indian youth organization emblems and saffron/red color scheme (ksys-logo.dim_400x400.png)\n- Hero background image with subtle traditional Indian patterns in warm tones (hero-bg.dim_1920x600.png)",
+  "existing_features": [
+    {
+      "id": "feature-create-a-home-page-with-a-hero-section-displaying-the-organization-logo-and-name-karani-sena-yuva-shakti",
+      "title": "Create a home page with a hero section displaying the organization logo and name 'Karani Sena Yuva Shakti'",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-photo-gallery-section-on-the-home-page-that-displays-multiple-photos-uploaded-by-admins",
+      "title": "Implement a photo gallery section on the home page that displays multiple photos uploaded by admins",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-organization-news-and-messages-section-on-the-home-page-that-displays-posts-created-by-admins",
+      "title": "Add an organization news and messages section on the home page that displays posts created by admins",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-an-admission-form-page-with-fields-for-full-name-complete-address-email-date-of-birth-and-mobile-number",
+      "title": "Create an admission form page with fields for: full name, complete address, email, date of birth, and mobile number",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-photo-upload-field-to-the-admission-form-where-candidates-can-upload-their-own-photo",
+      "title": "Add a photo upload field to the admission form where candidates can upload their own photo",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-an-admin-panel-protected-by-internet-identity-authentication-that-allows-admins-to-log-in-securely",
+      "title": "Create an admin panel protected by Internet Identity authentication that allows admins to log in securely",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-admin-functionality-to-view-and-manage-all-admission-form-submissions-in-the-admin-panel",
+      "title": "Implement admin functionality to view and manage all admission form submissions in the admin panel",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-admin-functionality-to-upload-view-and-delete-multiple-photos-for-the-home-page-gallery",
+      "title": "Add admin functionality to upload, view, and delete multiple photos for the home page gallery",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-admin-functionality-to-create-edit-and-delete-organization-news-and-message-posts",
+      "title": "Implement admin functionality to create, edit, and delete organization news and message posts",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-design-the-website-with-a-visually-cohesive-theme-using-warm-traditional-colors-saffron-deep-red-gold-accents-with-clean-typography-and-culturally-respectful-layout-patterns-appropriate-for-a-youth-organization",
+      "title": "Design the website with a visually cohesive theme using warm, traditional colors (saffron, deep red, gold accents) with clean typography and culturally respectful layout patterns appropriate for a youth organization",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Home page with hero section, photo gallery, and news section",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Admission form page with candidate details and photo upload",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Admin panel with Internet Identity authentication to manage submissions, gallery, and news",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Store all admission form submissions in the backend database, including candidate details and uploaded photo",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Karani Sena Yuva Shakti Website",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}
