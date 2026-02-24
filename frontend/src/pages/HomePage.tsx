@@ -33,22 +33,26 @@ export default function HomePage() {
                   करणी सेना युवा शक्ति
                 </h1>
                 <p className="text-lg md:text-xl text-muted-foreground mt-2">
-                  Empowering Youth, Building Tomorrow
+                  युवाओं को सशक्त बनाना, कल का निर्माण करना
                 </p>
               </div>
             </div>
             <p className="text-lg text-foreground/90 max-w-2xl">
-              Join us in our mission to empower young minds and build a stronger community. Together, we create
-              opportunities for growth, leadership, and positive change.
+              युवा मन को सशक्त बनाने और एक मजबूत समुदाय बनाने के हमारे मिशन में हमसे जुड़ें। 
+              मिलकर हम विकास, नेतृत्व और सकारात्मक बदलाव के अवसर बनाते हैं।
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button asChild size="lg" className="shadow-warm">
+              <Button
+                asChild
+                size="lg"
+                className="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white shadow-warm border-0 font-bold tracking-wide transition-colors duration-200"
+              >
                 <Link to="/admission">
-                  Apply for Admission <ArrowRight className="ml-2 h-5 w-5" />
+                  प्रवेश के लिए आवेदन करें <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
               <Button variant="outline" size="lg" onClick={scrollToNews}>
-                Learn More
+                और जानें
               </Button>
             </div>
           </div>

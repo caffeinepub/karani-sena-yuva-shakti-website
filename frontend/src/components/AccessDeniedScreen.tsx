@@ -12,16 +12,15 @@ export default function AccessDeniedScreen() {
           </div>
         </div>
         <div className="space-y-2">
-          <h1 className="text-3xl font-bold">Access Denied</h1>
+          <h1 className="text-3xl font-bold">पहुंच अस्वीकृत</h1>
           <p className="text-muted-foreground">
-            You don't have permission to access this page. Only administrators can view this content.
+            आपके पास इस पृष्ठ तक पहुंचने की अनुमति नहीं है। केवल प्रशासक ही इस सामग्री को देख सकते हैं।
           </p>
         </div>
         <Button asChild>
-          <Link to="/">Return to Home</Link>
+          <Link to="/">होम पर वापस जाएं</Link>
         </Button>
       </div>
     </div>
   );
 }
-

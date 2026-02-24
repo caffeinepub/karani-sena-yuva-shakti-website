@@ -10,7 +10,7 @@ export default function GallerySection() {
     return (
       <section className="py-16 bg-muted/30">
         <div className="container">
-          <h2 className="text-3xl font-bold text-center mb-12">Photo Gallery</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">फोटो गैलरी</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map((i) => (
               <Skeleton key={i} className="h-64 rounded-lg" />
@@ -25,14 +25,14 @@ export default function GallerySection() {
     return (
       <section className="py-16 bg-muted/30">
         <div className="container">
-          <h2 className="text-3xl font-bold text-center mb-12">Photo Gallery</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">फोटो गैलरी</h2>
           <div className="text-center py-12">
             <div className="flex justify-center mb-4">
               <div className="rounded-full bg-muted p-6">
                 <ImageIcon className="h-12 w-12 text-muted-foreground" />
               </div>
             </div>
-            <p className="text-muted-foreground">No photos available yet. Check back soon!</p>
+            <p className="text-muted-foreground">अभी तक कोई फोटो उपलब्ध नहीं है। जल्द ही देखें!</p>
           </div>
         </div>
       </section>
@@ -42,7 +42,7 @@ export default function GallerySection() {
   return (
     <section className="py-16 bg-muted/30">
       <div className="container">
-        <h2 className="text-3xl font-bold text-center mb-12">Photo Gallery</h2>
+        <h2 className="text-3xl font-bold text-center mb-12">फोटो गैलरी</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {galleryItems.map((item, index) => (
             <Card key={index} className="overflow-hidden group hover:shadow-warm transition-shadow">
@@ -65,4 +65,3 @@ export default function GallerySection() {
     </section>
   );
 }
-

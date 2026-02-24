@@ -1,10 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Replace the hero section logo with the circular करणी सेना युवा शक्ति emblem image (IMG-20260121-WA0003-1.jpg) with a transparent background.
+**Goal:** Make the 'प्रवेश के लिए आवेदन करें' (Apply for Admission) button on the home page hero section stand out with a distinct contrasting highlight color.
 
 **Planned changes:**
-- Remove the white background from IMG-20260121-WA0003-1.jpg and save it as `logo-emblem.png` at `frontend/public/assets/generated/logo-emblem.png`
-- Replace the current logo in the home page hero section with this new `logo-emblem.png` image
+- Update the 'प्रवेश के लिए आवेदन करें' button in `HomePage.tsx` to use a bright contrasting color (e.g., emerald green or royal blue) that is clearly different from the existing saffron/gold/deep-red palette
+- Add a complementary hover/focus state for the new button color
+- Leave all other buttons and UI elements unchanged
 
-**User-visible outcome:** The hero section displays the circular करणी सेना युवा शक्ति emblem with no white background, blending naturally with the hero section background on both desktop and mobile.
+**User-visible outcome:** The 'प्रवेश के लिए आवेदन करें' button is visually the most prominent CTA on the hero section, immediately drawing attention with a distinct highlight color while remaining consistent with the overall warm traditional design.

@@ -101,37 +101,46 @@
   }
 }
 
-/* Print styles for admission card */
+/* Print styles for admission ID card */
 @media print {
+  /* Hide everything by default */
   body * {
     visibility: hidden;
   }
-  
-  .print\:block,
-  .print\:block * {
-    visibility: visible;
-  }
-  
-  /* Ensure the admission card and its contents are visible */
-  [class*="AdmissionCard"],
-  [class*="AdmissionCard"] * {
-    visibility: visible;
-  }
-  
-  /* Hide print buttons and other UI elements */
+
+  /* Hide print buttons and non-card UI */
   .print\:hidden {
     display: none !important;
   }
-  
-  /* Optimize page layout for printing */
-  @page {
-    margin: 1cm;
-    size: A4;
+
+  /* Show only the ID card */
+  #admission-id-card,
+  #admission-id-card * {
+    visibility: visible;
   }
-  
-  /* Ensure proper spacing and layout */
+
+  /* Position the card at the top-left of the page */
+  #admission-id-card {
+    position: fixed !important;
+    top: 10mm !important;
+    left: 10mm !important;
+    /* Physical credit card dimensions */
+    width: 85.6mm !important;
+    height: 54mm !important;
+    border-radius: 3mm !important;
+    box-shadow: none !important;
+    overflow: hidden !important;
+  }
+
+  /* Ensure colors print correctly */
   body {
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
+  }
+
+  /* Page setup for ID card printing */
+  @page {
+    margin: 0;
+    size: A4;
   }
 }

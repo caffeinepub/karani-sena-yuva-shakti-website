@@ -1,45 +1,43 @@
 {
   "kind": "build_request",
-  "title": "Replace hero section logo with circular emblem image without white background",
+  "title": "Highlight 'प्रवेश के लिए आवेदन करें' button with a distinct contrasting color",
   "projectName": "करणी सेना युवा शक्ति",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-35",
-      "text": "Replace the current logo in the home page hero section with the uploaded circular emblem image (IMG-20260121-WA0003-1.jpg) — the version without the white background — featuring 'करणी सेना युवा शक्ति' text in Devanagari script around the top, two deity portraits, crossed swords, and a central sunrise symbol over water waves with gradient orange-yellow background. Save the image as a static asset at frontend/public/assets/generated/logo-emblem.png and render it in the hero section.",
+      "id": "REQ-42",
+      "text": "In the home page hero section (HomePage.tsx), update the 'प्रवेश के लिए आवेदन करें' (Apply for Admission) call-to-action button to use a distinct, visually contrasting highlight color that makes it stand out prominently from the other buttons and the hero background. The highlight color should complement but contrast clearly with the existing saffron/gold/deep-red theme — for example, a bright emerald green, royal blue, or vibrant accent not currently used on the page. Ensure the button retains readable text, appropriate hover/focus states, and remains visually consistent with the overall warm traditional design language.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-10",
-          "msg-11",
-          "msg-12"
+          "msg-user-1"
         ],
         "quotes": [
-          "No white background",
-          "Replace the hero section logo with the second image (IMG-20260121-WA0003-1.jpg) — the circular करणी सेना युवा शक्ति emblem without the white background"
+          "\"Pravesh ke liye aavedan kare\" ko highlight karo kisi dusre color me"
         ]
       },
       "acceptanceCriteria": [
-        "The hero section on the home page displays the circular emblem from IMG-20260121-WA0003-1.jpg",
-        "The logo image has no white background (transparent or blended with the hero background)",
-        "The image is served from frontend/public/assets/generated/logo-emblem.png",
-        "The logo renders correctly on both desktop and mobile viewports",
-        "No previous placeholder or old logo is visible in the hero section"
+        "The 'प्रवेश के लिए आवेदन करें' button on the home page hero section renders in a distinct highlight color that is clearly different from the saffron/gold/deep-red palette used by other elements.",
+        "The button color contrasts visually with the hero section background and surrounding buttons, making it the most prominent CTA on the page.",
+        "The button has a visible hover/focus state that complements the chosen highlight color.",
+        "Button text remains fully legible against the new background color.",
+        "All other buttons and UI elements on the home page retain their existing styling unchanged."
       ]
     }
   ],
   "constraints": [
-    "Use IMG-20260121-WA0003-1.jpg (no white background version), not IMG-20260121-WA0003.jpg"
+    "Do not modify any files listed under frontend.immutablePaths.",
+    "Only the 'प्रवेश के लिए आवेदन करें' button color should change; do not alter other buttons or hero section layout.",
+    "The new color must not conflict with or duplicate existing saffron, deep red, or gold brand colors already used on the page."
   ],
   "nonGoals": [
-    "Changing any other section of the home page",
-    "Modifying the Layout header logo separately",
-    "Any backend changes"
+    "Changing any other buttons or CTA elements on the home page.",
+    "Modifying the admin panel styling.",
+    "Altering the overall color theme or brand palette of the website.",
+    "Changes to the admission form page or any other page."
   ],
   "imageRequirements": {
     "required": [],
-    "edits": [
-      "Remove white background to make it fully transparent, preserving the circular emblem shape (IMG-20260121-WA0003-1.jpg > logo-emblem.dim_512x512.png)"
-    ]
+    "edits": []
   }
 }

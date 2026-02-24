@@ -14,7 +14,7 @@ export default function NewsSection() {
     return (
       <section id="news" className="py-16">
         <div className="container">
-          <h2 className="text-3xl font-bold text-center mb-12">Latest News & Updates</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">ताज़ा समाचार और अपडेट</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3].map((i) => (
               <Card key={i}>
@@ -36,14 +36,14 @@ export default function NewsSection() {
     return (
       <section id="news" className="py-16">
         <div className="container">
-          <h2 className="text-3xl font-bold text-center mb-12">Latest News & Updates</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">ताज़ा समाचार और अपडेट</h2>
           <div className="text-center py-12">
             <div className="flex justify-center mb-4">
               <div className="rounded-full bg-muted p-6">
                 <Newspaper className="h-12 w-12 text-muted-foreground" />
               </div>
             </div>
-            <p className="text-muted-foreground">No news updates available yet. Check back soon!</p>
+            <p className="text-muted-foreground">अभी तक कोई समाचार उपलब्ध नहीं है। जल्द ही देखें!</p>
           </div>
         </div>
       </section>
@@ -53,14 +53,14 @@ export default function NewsSection() {
   return (
     <section id="news" className="py-16">
       <div className="container">
-        <h2 className="text-3xl font-bold text-center mb-12">Latest News & Updates</h2>
+        <h2 className="text-3xl font-bold text-center mb-12">ताज़ा समाचार और अपडेट</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {sortedNews.map((item, index) => (
             <Card key={index} className="hover:shadow-warm transition-shadow">
               <CardHeader>
                 <CardTitle className="text-xl">{item.title}</CardTitle>
                 <p className="text-xs text-muted-foreground">
-                  {new Date(Number(item.createdAt)).toLocaleDateString('en-US', {
+                  {new Date(Number(item.createdAt)).toLocaleDateString('hi-IN', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric',
@@ -77,4 +77,3 @@ export default function NewsSection() {
     </section>
   );
 }
-

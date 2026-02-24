@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 19,
-  "summary": "Karani Sena Yuva Shakti organization website with home page (hero section with custom circular logo emblem without white background, admin-managed photo gallery, news section), public admission form page (collects candidate name, father's name, address, email, DOB, mobile, and photo; generates unique 10-character ID in format YYYY0-XXXXX; displays printable admission card after submission), and Internet Identity-protected admin panel with sidebar menu navigation and super admin authorization (manage submissions with unique IDs, gallery photos, news posts, and admin users); organization name displayed in Devanagari script as 'करणी सेना युवा शक्ति'",
+  "projectStateVersion": 25,
+  "summary": "Karani Sena Yuva Shakti organization website with home page (hero section with custom circular logo emblem without white background, admin-managed photo gallery, news section), public admission form page (collects candidate name, father's name, address, email, DOB, mobile, and photo; generates unique 10-character ID in format YYYY0-XXXXX; displays printable ID card-sized admission card after submission with all labels in Hindi, styled as a wallet/credit card ~85×54mm with organization branding), and Internet Identity-protected admin panel with sidebar menu navigation and super admin authorization (manage submissions with unique IDs, gallery photos, news posts, and admin users); all public-facing UI text in Hindi (home page, navigation, admission form, buttons, labels, error messages); admin panel remains in English; organization name displayed in Devanagari script as 'करणी सेना युवा शक्ति'",
   "architectural_notes": [
     "Using Internet Identity for admin authentication",
     "Backend database for storing admission form submissions",
@@ -16,7 +16,6 @@
   ],
   "known_issues": [],
   "isFixRequest": false,
-  "imageRequirements": "## Edit Images\n- Remove white background to make it fully transparent, preserving the circular emblem shape (IMG-20260121-WA0003-1.jpg > logo-emblem.dim_512x512.png)",
   "existing_features": [
     {
       "id": "feature-create-a-home-page-with-a-hero-section-displaying-the-organization-logo-and-name-karani-sena-yuva-shakti",
@@ -225,6 +224,62 @@
         "REQ-35"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-translate-all-public-facing-ui-text-in-the-home-page-homepage-tsx-to-hindi-including-the-hero-section-headings-subheadings-call-to-action-button-labels-e-g-join-now-learn-more-gallery-section-title-news-section-title-and-any-other-visible-text-keep-the-organization-name-as-in-devanagari-script",
+      "title": "Translate all public-facing UI text in the Home page (HomePage.tsx) to Hindi, including the hero section headings, subheadings, call-to-action button labels (e.g., 'Join Now' → 'अभी जुड़ें', 'Learn More' → 'और जानें'), gallery section title, news section title, and any other visible text. Keep the organization name as 'करणी सेना युवा शक्ति' in Devanagari script.",
+      "reqIds": [
+        "REQ-36"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-translate-all-navigation-menu-items-and-header-text-in-the-layout-component-layout-tsx-to-hindi-including-links-such-as-home-admission-and-any-other-public-facing-navigation-labels-the-admin-link-for-authenticated-users-may-remain-in-english-as-it-leads-to-the-admin-panel",
+      "title": "Translate all navigation menu items and header text in the Layout component (Layout.tsx) to Hindi, including links such as 'Home' → 'होम', 'Admission' → 'प्रवेश', and any other public-facing navigation labels. The 'Admin' link for authenticated users may remain in English as it leads to the admin panel.",
+      "reqIds": [
+        "REQ-37"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-translate-all-text-on-the-admission-form-page-admissionformpage-tsx-to-hindi-including-page-title-field-labels-placeholder-text-validation-error-messages-etc-and-the-submit-button-label",
+      "title": "Translate all text on the Admission Form page (AdmissionFormPage.tsx) to Hindi, including: page title, field labels ('पूरा नाम', 'पिता का नाम', 'पूरा पता', 'ईमेल', 'जन्म तिथि', 'मोबाइल नंबर', 'फोटो अपलोड करें'), placeholder text, validation error messages ('यह फ़ील्ड आवश्यक है', 'कृपया वैध ईमेल दर्ज करें', etc.), and the submit button label ('जमा करें').",
+      "reqIds": [
+        "REQ-38"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-admissioncard-component-admissioncard-tsx-so-that-all-labels-and-text-on-the-printable-admission-card-are-in-hindi-the-card-title-e-g-and-the-print-button-label-organization-name-remains",
+      "title": "Update the AdmissionCard component (AdmissionCard.tsx) so that all labels and text on the printable admission card are in Hindi: 'प्रवेश आईडी', 'नाम', 'पिता का नाम', 'जन्म तिथि', 'मोबाइल नंबर', 'पता', 'जमा करने की तारीख', the card title (e.g., 'प्रवेश पत्र'), and the print button label ('प्रिंट करें'). Organization name remains 'करणी सेना युवा शक्ति'.",
+      "reqIds": [
+        "REQ-39"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-translate-any-public-facing-text-in-the-accessdeniedscreen-component-and-the-gallerysection-and-newssection-components-to-hindi-including-empty-state-messages-loading-states-and-any-descriptive-text-visible-to-non-admin-public-users",
+      "title": "Translate any public-facing text in the AccessDeniedScreen component and the GallerySection and NewsSection components to Hindi, including empty-state messages, loading states, and any descriptive text visible to non-admin public users.",
+      "reqIds": [
+        "REQ-40"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-redesign-the-admissioncard-component-frontend-src-components-admissioncard-tsx-as-a-compact-physical-id-card-sized-layout-85-54mm-credit-card-proportions-with-the-following-organization-logo-frontend-public-assets-generated-logo-emblem-png-in-the-top-left-corner-organization-name-as-the-card-header-candidate-photo-thumbnail-on-the-right-side-and-the-following-fields-displayed-prominently-in-hindi-labels-unique-admission-id-styled-prominently-full-name-father-s-name-date-of-birth-mobile-number-apply-saffron-gold-warm-theme-with-deep-red-accents-consistent-with-the-existing-site-branding-the-card-must-render-at-fixed-credit-card-proportions-aspect-ratio-1-586-1-and-be-print-optimized-keep-the-print-button-outside-the-card-area-so-it-does-not-appear-when-printing",
+      "title": "Redesign the AdmissionCard component (frontend/src/components/AdmissionCard.tsx) as a compact physical ID card sized layout (~85×54mm / credit card proportions) with the following: organization logo (frontend/public/assets/generated/logo-emblem.png) in the top-left corner, organization name 'करणी सेना युवा शक्ति' as the card header, candidate photo thumbnail on the right side, and the following fields displayed prominently in Hindi labels: प्रवेश आईडी (unique admission ID, styled prominently), नाम (full name), पिता का नाम (father's name), जन्म तिथि (date of birth), मोबाइल नंबर (mobile number). Apply saffron/gold warm theme with deep red accents consistent with the existing site branding. The card must render at fixed credit-card proportions (aspect ratio ~1.586:1) and be print-optimized. Keep the 'प्रिंट करें' print button outside the card area so it does not appear when printing.",
+      "reqIds": [
+        "REQ-41"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-the-home-page-hero-section-homepage-tsx-update-the-apply-for-admission-call-to-action-button-to-use-a-distinct-visually-contrasting-highlight-color-that-makes-it-stand-out-prominently-from-the-other-buttons-and-the-hero-background-the-highlight-color-should-complement-but-contrast-clearly-with-the-existing-saffron-gold-deep-red-theme-for-example-a-bright-emerald-green-royal-blue-or-vibrant-accent-not-currently-used-on-the-page-ensure-the-button-retains-readable-text-appropriate-hover-focus-states-and-remains-visually-consistent-with-the-overall-warm-traditional-design-language",
+      "title": "In the home page hero section (HomePage.tsx), update the 'प्रवेश के लिए आवेदन करें' (Apply for Admission) call-to-action button to use a distinct, visually contrasting highlight color that makes it stand out prominently from the other buttons and the hero background. The highlight color should complement but contrast clearly with the existing saffron/gold/deep-red theme — for example, a bright emerald green, royal blue, or vibrant accent not currently used on the page. Ensure the button retains readable text, appropriate hover/focus states, and remains visually consistent with the overall warm traditional design language.",
+      "reqIds": [
+        "REQ-42"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -401,6 +456,24 @@
       "summary": "Replace hero section logo with circular emblem image (no white background version) featuring 'करणी सेना युवा शक्ति' text, deity portraits, crossed swords, and sunrise symbol",
       "reqIds": [],
       "status": "in_progress"
+    },
+    {
+      "id": "AR-28",
+      "summary": "Convert all public-facing UI text to Hindi (home page, navigation, admission form, buttons, labels, error messages); keep admin panel in English; admission card labels in Hindi (नाम, पिता का नाम, जन्म तिथि, मोबाइल नंबर, प्रवेश आईडी, पता, जमा करने की तारीख)",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-29",
+      "summary": "Redesign AdmissionCard component as a physical ID card size (~85×54mm / credit card size) with organization branding (saffron/gold theme, logo), showing unique ID, name, father's name, mobile number, DOB, and candidate photo in a compact wallet card layout optimized for printing",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-30",
+      "summary": "Highlight the 'प्रवेश के लिए आवेदन करें' button on the home page with a distinct/contrasting color to make it more visually prominent",
+      "reqIds": [],
+      "status": "pending"
     }
   ],
   "gameProjectType": "none",

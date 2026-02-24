@@ -1,23 +1,23 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Replace hero section logo with circular emblem image without white background",
+  "title": "Highlight 'प्रवेश के लिए आवेदन करें' button with a distinct contrasting color",
   "requirements": [
     {
-      "id": "REQ-35",
-      "summary": "Replace the current logo in the home page hero section with the uploaded circular emblem image (IMG-20260121-WA0003-1.jpg) without white background, featuring 'करणी सेना युवा शक्ति' text, deity portraits, crossed swords, and sunrise symbol. Save as frontend/public/assets/generated/logo-emblem.png and render in hero section.",
+      "id": "REQ-42",
+      "summary": "Update the 'प्रवेश के लिए आवेदन करें' (Apply for Admission) call-to-action button in the home page hero section to use a distinct, visually contrasting highlight color (e.g., emerald green, royal blue, or vibrant accent) that makes it stand out prominently from the existing saffron/gold/deep-red theme while maintaining readability and appropriate hover/focus states",
       "acceptanceCriteria": [
-        "The hero section on the home page displays the circular emblem from IMG-20260121-WA0003-1.jpg",
-        "The logo image has no white background (transparent or blended with the hero background)",
-        "The image is served from frontend/public/assets/generated/logo-emblem.png",
-        "The logo renders correctly on both desktop and mobile viewports",
-        "No previous placeholder or old logo is visible in the hero section"
+        "The 'प्रवेश के लिए आवेदन करें' button on the home page hero section renders in a distinct highlight color that is clearly different from the saffron/gold/deep-red palette used by other elements.",
+        "The button color contrasts visually with the hero section background and surrounding buttons, making it the most prominent CTA on the page.",
+        "The button has a visible hover/focus state that complements the chosen highlight color.",
+        "Button text remains fully legible against the new background color.",
+        "All other buttons and UI elements on the home page retain their existing styling unchanged."
       ],
       "file_operations": [
         {
           "path": "frontend/src/pages/HomePage.tsx",
           "operation": "modify",
-          "description": "Replace the current logo image source in the hero section with the new circular emblem from frontend/public/assets/generated/logo-emblem.dim_512x512.png. Ensure the img element references the exact generated filename, adjust sizing and styling to display the emblem prominently without white background artifacts, and verify responsive behavior across desktop and mobile viewports. Remove any previous placeholder logo references."
+          "description": "Update the 'प्रवेश के लिए आवेदन करें' button styling to use a distinct highlight color (e.g., emerald-600/emerald-700 for hover) that contrasts with the existing warm saffron/gold/deep-red theme. Ensure the button retains white text for legibility and includes appropriate hover and focus states. Do not modify any other buttons or hero section elements."
         }
       ]
     }

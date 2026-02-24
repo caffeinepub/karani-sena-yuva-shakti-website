@@ -3,11 +3,13 @@ import { Button } from '@/components/ui/button';
 import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function Layout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { identity, clear, login, loginStatus } = useInternetIdentity();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const isAuthenticated = !!identity;
   const isLoggingIn = loginStatus === 'logging-in';
@@ -15,6 +17,7 @@ export default function Layout() {
   const handleAuth = async () => {
     if (isAuthenticated) {
       await clear();
+      queryClient.clear();
       navigate({ to: '/' });
     } else {
       try {
@@ -41,10 +44,10 @@ export default function Layout() {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
             <Link to="/" className="text-sm font-medium transition-colors hover:text-primary">
-              Home
+              होम
             </Link>
             <Link to="/admission" className="text-sm font-medium transition-colors hover:text-primary">
-              Admission Form
+              प्रवेश फॉर्म
             </Link>
             {isAuthenticated && (
               <Link to="/admin" className="text-sm font-medium transition-colors hover:text-primary">
@@ -57,7 +60,7 @@ export default function Layout() {
               variant={isAuthenticated ? 'outline' : 'default'}
               size="sm"
             >
-              {isLoggingIn ? 'Logging in...' : isAuthenticated ? 'Logout' : 'Login'}
+              {isLoggingIn ? 'लॉगिन हो रहा है...' : isAuthenticated ? 'लॉगआउट' : 'लॉगिन'}
             </Button>
           </nav>
 
@@ -80,14 +83,14 @@ export default function Layout() {
                 className="text-sm font-medium transition-colors hover:text-primary py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Home
+                होम
               </Link>
               <Link
                 to="/admission"
                 className="text-sm font-medium transition-colors hover:text-primary py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Admission Form
+                प्रवेश फॉर्म
               </Link>
               {isAuthenticated && (
                 <Link
@@ -108,7 +111,7 @@ export default function Layout() {
                 size="sm"
                 className="w-full"
               >
-                {isLoggingIn ? 'Logging in...' : isAuthenticated ? 'Logout' : 'Login'}
+                {isLoggingIn ? 'लॉगिन हो रहा है...' : isAuthenticated ? 'लॉगआउट' : 'लॉगिन'}
               </Button>
             </nav>
           </div>

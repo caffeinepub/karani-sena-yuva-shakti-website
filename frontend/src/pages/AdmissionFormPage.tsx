@@ -40,7 +40,7 @@ export default function AdmissionFormPage() {
     e.preventDefault();
 
     if (!formData.fullName || !formData.fatherName || !formData.dateOfBirth || !formData.mobile || !formData.address) {
-      toast.error('Please fill in all required fields');
+      toast.error('कृपया सभी आवश्यक फ़ील्ड भरें');
       return;
     }
 
@@ -56,14 +56,14 @@ export default function AdmissionFormPage() {
       },
       {
         onSuccess: (admissionID) => {
-          toast.success('Application submitted successfully!');
+          toast.success('आवेदन सफलतापूर्वक जमा किया गया!');
           setSubmissionData({
             admissionID,
             submittedDate: new Date(),
           });
         },
         onError: (error) => {
-          toast.error('Failed to submit application: ' + error.message);
+          toast.error('आवेदन जमा करने में विफल: ' + error.message);
         },
       }
     );
@@ -89,11 +89,11 @@ export default function AdmissionFormPage() {
           <Alert className="print:hidden">
             <Info className="h-4 w-4" />
             <AlertDescription>
-              Your application has been successfully submitted. Please save or print this admission card for your records. 
-              Your official admission ID will be confirmed by the administration.
+              आपका आवेदन सफलतापूर्वक जमा हो गया है। कृपया अपने रिकॉर्ड के लिए इस प्रवेश पत्र को सहेजें या प्रिंट करें।
+              आपकी आधिकारिक प्रवेश आईडी प्रशासन द्वारा पुष्टि की जाएगी।
             </AlertDescription>
           </Alert>
-          
+
           <AdmissionCard
             admissionID={submissionData.admissionID}
             fullName={formData.fullName}
@@ -105,7 +105,7 @@ export default function AdmissionFormPage() {
           />
           <div className="text-center mt-8 print:hidden">
             <Button onClick={handleNewApplication} variant="outline" size="lg">
-              Submit Another Application
+              नया आवेदन जमा करें
             </Button>
           </div>
         </div>
@@ -118,23 +118,23 @@ export default function AdmissionFormPage() {
       <div className="max-w-2xl mx-auto">
         <Card>
           <CardHeader>
-            <CardTitle className="text-3xl">Admission Form</CardTitle>
+            <CardTitle className="text-3xl">प्रवेश फॉर्म</CardTitle>
             <CardDescription>
-              Fill out the form below to apply for membership in Karani Sena Yuva Shakti
+              करणी सेना युवा शक्ति की सदस्यता के लिए आवेदन करने हेतु नीचे दिया गया फॉर्म भरें
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="fullName">
-                  Full Name <span className="text-destructive">*</span>
+                  पूरा नाम <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="fullName"
                   name="fullName"
                   value={formData.fullName}
                   onChange={handleChange}
-                  placeholder="Enter your full name"
+                  placeholder="अपना पूरा नाम दर्ज करें"
                   disabled={isPending}
                   required
                 />
@@ -142,14 +142,14 @@ export default function AdmissionFormPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="fatherName">
-                  Father's Name <span className="text-destructive">*</span>
+                  पिता का नाम <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="fatherName"
                   name="fatherName"
                   value={formData.fatherName}
                   onChange={handleChange}
-                  placeholder="Enter your father's name"
+                  placeholder="अपने पिता का नाम दर्ज करें"
                   disabled={isPending}
                   required
                 />
@@ -157,7 +157,7 @@ export default function AdmissionFormPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="dateOfBirth">
-                  Date of Birth <span className="text-destructive">*</span>
+                  जन्म तिथि <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="dateOfBirth"
@@ -172,7 +172,7 @@ export default function AdmissionFormPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="mobile">
-                  Mobile Number <span className="text-destructive">*</span>
+                  मोबाइल नंबर <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="mobile"
@@ -180,34 +180,34 @@ export default function AdmissionFormPage() {
                   type="tel"
                   value={formData.mobile}
                   onChange={handleChange}
-                  placeholder="Enter your mobile number"
+                  placeholder="अपना मोबाइल नंबर दर्ज करें"
                   disabled={isPending}
                   required
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="lastQualification">Last Qualification</Label>
+                <Label htmlFor="lastQualification">अंतिम शिक्षा योग्यता</Label>
                 <Input
                   id="lastQualification"
                   name="lastQualification"
                   value={formData.lastQualification}
                   onChange={handleChange}
-                  placeholder="e.g., High School, Bachelor's Degree"
+                  placeholder="जैसे: हाई स्कूल, स्नातक"
                   disabled={isPending}
                 />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="address">
-                  Complete Address <span className="text-destructive">*</span>
+                  पूरा पता <span className="text-destructive">*</span>
                 </Label>
                 <Textarea
                   id="address"
                   name="address"
                   value={formData.address}
                   onChange={handleChange}
-                  placeholder="Enter your complete address"
+                  placeholder="अपना पूरा पता दर्ज करें"
                   rows={4}
                   disabled={isPending}
                   required
@@ -215,14 +215,14 @@ export default function AdmissionFormPage() {
               </div>
 
               <ImageUploadField
-                label="Your Photo"
+                label="आपकी फोटो"
                 value={photo}
                 onChange={setPhoto}
                 disabled={isPending}
               />
 
               <Button type="submit" className="w-full" size="lg" disabled={isPending}>
-                {isPending ? 'Submitting...' : 'Submit Application'}
+                {isPending ? 'जमा हो रहा है...' : 'आवेदन जमा करें'}
               </Button>
             </form>
           </CardContent>
