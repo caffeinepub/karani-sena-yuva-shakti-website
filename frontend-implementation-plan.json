@@ -1,31 +1,26 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Fix admission ID format inconsistency on first form submission",
+  "title": "Fix mobile number search returning 'no entry found' for registered candidates",
   "requirements": [
     {
-      "id": "REQ-2",
-      "summary": "Remove frontend-side temporary admission ID generation and display backend-returned admission ID directly",
+      "id": "REQ-3",
+      "summary": "Update the frontend hook and reprint page to correctly pass normalized mobile number to backend and display admission card with backend-assigned ID or show Hindi error message",
       "acceptanceCriteria": [
-        "No temporary ID (e.g., '20260-XXXXX' format) is ever generated or displayed on the frontend.",
-        "The AdmissionCard component receives and displays the admission ID returned directly from the backend after form submission.",
-        "The useSubmitAdmissionForm hook uses the backend-returned ID value exclusively."
+        "Entering a registered mobile number on the reprint page and pressing 'खोजें' shows the AdmissionCard component with the correct backend ID",
+        "The error message 'इस मोबाइल नंबर से कोई प्रवेश नहीं मिला।' only appears for genuinely unregistered mobile numbers",
+        "The displayed admission ID on the reprint card matches the ID shown in the admin portal for the same candidate"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useSubmitAdmissionForm.ts",
+          "path": "frontend/src/hooks/useGetCandidateByMobile.ts",
           "operation": "modify",
-          "description": "Remove all temporary admission ID generation logic. The mutation function must return only the admission ID received directly from the backend response (result.ok when result.__kind__ === 'ok'). Do not generate any frontend-side IDs like '20260-34913'. Ensure the returned admissionId matches the backend format (e.g., '2023000008')."
+          "description": "Ensure the mutation passes a normalized mobile number (trimmed, no spaces, no country code prefix) to the backend getCandidateByMobile method. Apply the same normalization logic that the backend uses during candidate registration to guarantee consistent formatting."
         },
         {
-          "path": "frontend/src/pages/AdmissionFormPage.tsx",
+          "path": "frontend/src/pages/ReprintIdCardPage.tsx",
           "operation": "modify",
-          "description": "Update the form submission success handler to use the admission ID returned by the useSubmitAdmissionForm mutation directly. Remove any logic that generates or transforms the admission ID on the frontend. Pass the backend-returned ID to the AdmissionCard component without modification. Handle the mobileAlreadyRegistered error case by displaying the existing admission ID returned in the error payload."
-        },
-        {
-          "path": "frontend/src/components/AdmissionCard.tsx",
-          "operation": "modify",
-          "description": "Ensure the AdmissionCard component displays the admissionID prop exactly as received, without any frontend-side formatting or transformation. The displayed ID must match the backend format (e.g., '2023000008') visible in the Admin portal."
+          "description": "Normalize the mobile number input (trim whitespace, remove any non-digit characters except the core 10 digits) before calling the useGetCandidateByMobile mutation. On successful retrieval, pass the returned Candidate object to the AdmissionCard component to display the backend-assigned admissionID. If the mutation returns null, display the Hindi error message 'इस मोबाइल नंबर से कोई प्रवेश नहीं मिला।' in the alert component. Ensure the displayed admission ID matches the format used in the admin portal."
         }
       ]
     }

@@ -1,7 +1,7 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-25T00:37:24.184Z",
+  "generatedAt": "2026-02-25T01:02:15.162Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
@@ -12,47 +12,41 @@
     "items": [
       {
         "id": "REQ-1",
-        "summary": "When a candidate submits the admission form for the first time, the backend must return the stored admission ID in the Admin portal format (e.g., 2023000008 — a sequential numeric ID) immediately upon form submission, not a temporary frontend-generated ID like '20260-34913'. The ID shown on the AdmissionCard right after first submission must be identical to the ID stored in the backend and visible in the Admin portal.",
+        "summary": "Fix the backend `getCandidateByMobile` function so that it searches all registered candidates stored in the main candidates stable data structure. The search must be case-insensitive and match the exact 10-digit mobile number. Any candidate who submitted the admission form (regardless of when or how their data was saved) must be retrievable by their registered mobile number.",
         "status": "unknown",
         "plannedFiles": [],
         "matchedFiles": []
       },
       {
         "id": "REQ-2",
-        "summary": "Remove or stop using any frontend-side temporary admission ID generation logic in useSubmitAdmissionForm.ts or AdmissionFormPage.tsx. The admission ID displayed after submission must come directly from the backend response, not be generated on the frontend.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/hooks/useSubmitAdmissionForm.ts",
-          "frontend/src/pages/AdmissionFormPage.tsx",
-          "frontend/src/components/AdmissionCard.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/hooks/useSubmitAdmissionForm.ts",
-          "frontend/src/pages/AdmissionFormPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-3",
-        "summary": "Ensure duplicate mobile number registration is prevented: before creating a new admission record, the backend must check if a candidate with the same mobile number already exists. If they do, return the existing candidate's admission ID instead of creating a new record.",
+        "summary": "Ensure that when a candidate submits the admission form, their mobile number is stored in exactly the same format (normalized, trimmed, no spaces or country code prefix) as the format used during mobile number lookup in `getCandidateByMobile`. Both the submission path and the search path must use identical normalization logic.",
         "status": "unknown",
         "plannedFiles": [],
         "matchedFiles": []
+      },
+      {
+        "id": "REQ-3",
+        "summary": "Update the `useGetCandidateByMobile` frontend hook and the `ReprintIdCardPage` to correctly pass the normalized mobile number to the backend and display the admission card with the backend-assigned admission ID upon a successful match. If no match is found, display the Hindi error message 'इस मोबाइल नंबर से कोई प्रवेश नहीं मिला।'",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useGetCandidateByMobile.ts",
+          "frontend/src/pages/ReprintIdCardPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/hooks/useGetCandidateByMobile.ts",
+          "frontend/src/pages/ReprintIdCardPage.tsx"
+        ]
       }
     ]
   },
   "changedFiles": [
     "backend/main.mo",
-    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/backend.d.ts",
-    "frontend/src/backend.ts",
-    "frontend/src/declarations/backend.did.d.ts",
-    "frontend/src/declarations/backend.did.js",
-    "frontend/src/hooks/useSubmitAdmissionForm.ts",
-    "frontend/src/pages/AdmissionFormPage.tsx",
+    "frontend/src/hooks/useGetCandidateByMobile.ts",
+    "frontend/src/pages/ReprintIdCardPage.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

@@ -1,77 +1,79 @@
 {
   "kind": "build_request",
-  "title": "Fix admission ID format inconsistency on first form submission",
+  "title": "Fix mobile number search returning 'no entry found' for registered candidates",
   "projectName": "Karni Sena Yuva Shakti",
   "priority": "high",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "When a candidate submits the admission form for the first time, the backend must return the stored admission ID in the Admin portal format (e.g., 2023000008 — a sequential numeric ID) immediately upon form submission, not a temporary frontend-generated ID like '20260-34913'. The ID shown on the AdmissionCard right after first submission must be identical to the ID stored in the backend and visible in the Admin portal.",
+      "text": "Fix the backend `getCandidateByMobile` function so that it searches all registered candidates stored in the main candidates stable data structure. The search must be case-insensitive and match the exact 10-digit mobile number. Any candidate who submitted the admission form (regardless of when or how their data was saved) must be retrievable by their registered mobile number.",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-6",
-          "msg-8",
-          "msg-10"
+          "msg-1",
+          "msg-2"
         ],
         "quotes": [
-          "Admin portal wala",
-          "candidate ke form submit karne ke baad hi hota hai agar vah id punah prapat kare toh admin portal ke saman aati hai"
+          "इस मोबाइल नंबर से कोई प्रवेश नहीं मिला।",
+          "जब candidate form submit करे, तो उसका mobile number admin portal के same database में save हो",
+          "ID retrieve करते समय उसी database से search हो"
         ]
       },
       "acceptanceCriteria": [
-        "After first form submission, the AdmissionCard displays the same numeric ID format (e.g., 2023000008) that appears in the Admin portal for that candidate.",
-        "The backend submitAdmissionForm function returns the persistent sequential numeric admission ID, not any temporary frontend-generated ID.",
-        "Re-retrieving the same candidate by mobile number returns the exact same ID that was shown immediately after first submission."
+        "Searching mobile number 6392708274 (or any registered candidate's mobile) on the reprint page returns the candidate's admission card instead of 'no entry found'",
+        "The getCandidateByMobile backend function queries the same stable candidates map used by the admin portal",
+        "Mobile number lookup returns the correct backend-assigned admission ID (e.g., 2023000008 format)",
+        "Candidates registered both before and after this fix are discoverable by mobile number"
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Remove or stop using any frontend-side temporary admission ID generation logic in useSubmitAdmissionForm.ts or AdmissionFormPage.tsx. The admission ID displayed after submission must come directly from the backend response, not be generated on the frontend.",
-      "target": "frontend",
+      "text": "Ensure that when a candidate submits the admission form, their mobile number is stored in exactly the same format (normalized, trimmed, no spaces or country code prefix) as the format used during mobile number lookup in `getCandidateByMobile`. Both the submission path and the search path must use identical normalization logic.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-6",
-          "msg-10"
+          "msg-1",
+          "msg-2"
         ],
         "quotes": [
-          "Form submit hone par candidate portal apna alag ID format generate kar raha hai"
+          "Candidate registration form का data और ID retrieve system एक ही database से connected होगा",
+          "Mobile number से search करने पर registered candidate की ID सही से मिलेगी"
         ]
       },
       "acceptanceCriteria": [
-        "No temporary ID (e.g., '20260-XXXXX' format) is ever generated or displayed on the frontend.",
-        "The AdmissionCard component receives and displays the admission ID returned directly from the backend after form submission.",
-        "The useSubmitAdmissionForm hook uses the backend-returned ID value exclusively."
+        "A mobile number entered during registration can be found with the same number entered in the reprint search",
+        "Mobile numbers with leading/trailing spaces or inconsistent formatting are normalized before storage and before lookup",
+        "No new registration results in a 'no entry found' error on the reprint page"
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Ensure duplicate mobile number registration is prevented: before creating a new admission record, the backend must check if a candidate with the same mobile number already exists. If they do, return the existing candidate's admission ID instead of creating a new record.",
-      "target": "backend",
+      "text": "Update the `useGetCandidateByMobile` frontend hook and the `ReprintIdCardPage` to correctly pass the normalized mobile number to the backend and display the admission card with the backend-assigned admission ID upon a successful match. If no match is found, display the Hindi error message 'इस मोबाइल नंबर से कोई प्रवेश नहीं मिला।'",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-8",
-          "msg-10"
+          "msg-1"
         ],
         "quotes": [
-          "mobile number se check hota hai ki vah vyakti pehle se registered hai ya nahi"
+          "इस मोबाइल नंबर से कोई प्रवेश नहीं मिला।"
         ]
       },
       "acceptanceCriteria": [
-        "Submitting the admission form with an already-registered mobile number does not create a duplicate record.",
-        "When a duplicate mobile is detected, the backend returns the existing candidate's admission ID.",
-        "The frontend correctly handles and displays the existing ID when a duplicate mobile submission occurs."
+        "Entering a registered mobile number on the reprint page and pressing 'खोजें' shows the AdmissionCard component with the correct backend ID",
+        "The error message 'इस मोबाइल नंबर से कोई प्रवेश नहीं मिला।' only appears for genuinely unregistered mobile numbers",
+        "The displayed admission ID on the reprint card matches the ID shown in the admin portal for the same candidate"
       ]
     }
   ],
   "constraints": [
-    "Do not change the admission ID format currently used in the Admin portal (sequential numeric format like 2023000008).",
-    "Do not alter any immutable frontend paths listed in the system context."
+    "Do not change the admin portal candidate list or the admission ID generation format",
+    "Do not break existing authenticated admin functionality",
+    "All candidate data must remain in the single Motoko actor's stable storage"
   ],
   "nonGoals": [
-    "Changing the visual design of the AdmissionCard.",
-    "Adding new form fields to the admission form.",
-    "Modifying the Admin portal's candidate management UI."
+    "Migrating or deleting old candidate records",
+    "Adding new fields to the candidate data model",
+    "Changing the visual design of the reprint page"
   ],
   "imageRequirements": {
     "required": [],

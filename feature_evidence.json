@@ -2,11 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-remove-or-stop-using-any-frontend-side-temporary-admission-id-generation-logic-in-usesubmitadmissionform-ts-or-admissionformpage-tsx-the-admission-id-displayed-after-submission-must-come-directly-from-the-backend-response-not-be-generated-on-the-frontend",
-      "featureTitle": "Remove or stop using any frontend-side temporary admission ID generation logic in useSubmitAdmissionForm.ts or AdmissionFormPage.tsx. The admission ID displayed after submission must come directly from the backend response, not be generated on the frontend.",
+      "featureId": "feature-update-the-usegetcandidatebymobile-frontend-hook-and-the-reprintidcardpage-to-correctly-pass-the-normalized-mobile-number-to-the-backend-and-display-the-admission-card-with-the-backend-assigned-admission-id-upon-a-successful-match-if-no-match-is-found-display-the-hindi-error-message",
+      "featureTitle": "Update the `useGetCandidateByMobile` frontend hook and the `ReprintIdCardPage` to correctly pass the normalized mobile number to the backend and display the admission card with the backend-assigned admission ID upon a successful match. If no match is found, display the Hindi error message 'इस मोबाइल नंबर से कोई प्रवेश नहीं मिला।'",
       "files": [
-        "frontend/src/hooks/useSubmitAdmissionForm.ts",
-        "frontend/src/pages/AdmissionFormPage.tsx"
+        "frontend/src/hooks/useGetCandidateByMobile.ts",
+        "frontend/src/pages/ReprintIdCardPage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -18,7 +18,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-2"
+        "REQ-3"
       ],
       "confidence": "high"
     }

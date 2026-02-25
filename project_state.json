@@ -1,21 +1,21 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Admission/registration portal project with admin and candidate portals. A bug exists where candidates receive a different ID format on first form submission vs. retrieval. The fix ensures the Admin portal ID format (e.g., 2023000008) is shown consistently on both portals, and duplicate registrations are prevented via mobile number check.",
+  "summary": "Candidate registration portal with admin ID system. Fixing ID retrieval bug where registered candidates cannot find their ID using mobile number search.",
   "architectural_notes": [
-    "Two portals exist: Admin portal and Candidate portal — both must show the same ID for a given candidate",
-    "ID format standard: Admin portal style (e.g., 2023000008) is the canonical format to use everywhere"
+    "Candidate registration form data and ID retrieve system must use the same database",
+    "Admin portal IDs (e.g., 2023000008) must be searchable by mobile number"
   ],
   "known_issues": [
-    "Candidate receives a different temporary ID (e.g., 20260-34913) on first form submission instead of the Admin portal ID format (2023000008); only correct ID appears on re-retrieval"
+    "Mobile number search for ID retrieval returns 'no entry found' even for registered candidates — data saved in old format instead of admin portal database"
   ],
   "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-remove-or-stop-using-any-frontend-side-temporary-admission-id-generation-logic-in-usesubmitadmissionform-ts-or-admissionformpage-tsx-the-admission-id-displayed-after-submission-must-come-directly-from-the-backend-response-not-be-generated-on-the-frontend",
-      "title": "Remove or stop using any frontend-side temporary admission ID generation logic in useSubmitAdmissionForm.ts or AdmissionFormPage.tsx. The admission ID displayed after submission must come directly from the backend response, not be generated on the frontend.",
+      "id": "feature-update-the-usegetcandidatebymobile-frontend-hook-and-the-reprintidcardpage-to-correctly-pass-the-normalized-mobile-number-to-the-backend-and-display-the-admission-card-with-the-backend-assigned-admission-id-upon-a-successful-match-if-no-match-is-found-display-the-hindi-error-message",
+      "title": "Update the `useGetCandidateByMobile` frontend hook and the `ReprintIdCardPage` to correctly pass the normalized mobile number to the backend and display the admission card with the backend-assigned admission ID upon a successful match. If no match is found, display the Hindi error message 'इस मोबाइल नंबर से कोई प्रवेश नहीं मिला।'",
       "reqIds": [
-        "REQ-2"
+        "REQ-3"
       ],
       "version": 1
     }
@@ -23,17 +23,17 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "When a candidate submits the admission form for the first time, the backend must return the stored admission ID in the Admin portal format (e.g., 2023000008 — a sequential numeric ID) immediately upon form submission, not a temporary frontend-generated ID like '20260-34913'. The ID shown on the AdmissionCard right after first submission must be identical to the ID stored in the backend and visible in the Admin portal.",
+      "summary": "Fix the backend `getCandidateByMobile` function so that it searches all registered candidates stored in the main candidates stable data structure. The search must be case-insensitive and match the exact 10-digit mobile number. Any candidate who submitted the admission form (regardless of when or how their data was saved) must be retrievable by their registered mobile number.",
       "reqIds": [
         "REQ-1"
       ],
       "status": "pending"
     },
     {
-      "id": "AR-3",
-      "summary": "Ensure duplicate mobile number registration is prevented: before creating a new admission record, the backend must check if a candidate with the same mobile number already exists. If they do, return the existing candidate's admission ID instead of creating a new record.",
+      "id": "AR-2",
+      "summary": "Ensure that when a candidate submits the admission form, their mobile number is stored in exactly the same format (normalized, trimmed, no spaces or country code prefix) as the format used during mobile number lookup in `getCandidateByMobile`. Both the submission path and the search path must use identical normalization logic.",
       "reqIds": [
-        "REQ-3"
+        "REQ-2"
       ],
       "status": "pending"
     }

@@ -4,36 +4,56 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Search, AlertCircle, Info } from 'lucide-react';
+import { Search, AlertCircle, Info, Phone } from 'lucide-react';
 import AdmissionCard from '../components/AdmissionCard';
 import { useGetCandidateByMobile } from '../hooks/useGetCandidateByMobile';
-import { Candidate, ExternalBlob } from '../backend';
+import { Candidate } from '../backend';
+
+type SearchState = 'idle' | 'not_found' | 'found' | 'auth_error' | 'error';
 
 export default function ReprintIdCardPage() {
   const [mobile, setMobile] = useState('');
-  const [foundCandidate, setFoundCandidate] = useState<Candidate | null | undefined>(undefined);
+  const [foundCandidate, setFoundCandidate] = useState<Candidate | null>(null);
+  const [searchState, setSearchState] = useState<SearchState>('idle');
 
   const { mutate: searchCandidate, isPending } = useGetCandidateByMobile();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!mobile.trim()) return;
+    const trimmedMobile = mobile.trim();
+    if (!trimmedMobile) return;
 
-    searchCandidate(mobile.trim(), {
+    setSearchState('idle');
+    setFoundCandidate(null);
+
+    searchCandidate(trimmedMobile, {
       onSuccess: (candidate) => {
-        setFoundCandidate(candidate);
+        if (candidate) {
+          setFoundCandidate(candidate);
+          setSearchState('found');
+        } else {
+          setSearchState('not_found');
+        }
       },
-      onError: () => {
-        setFoundCandidate(null);
+      onError: (err: unknown) => {
+        const message = err instanceof Error ? err.message : String(err);
+        if (message === 'UNAUTHORIZED') {
+          setSearchState('auth_error');
+        } else {
+          setSearchState('error');
+        }
       },
     });
   };
 
   const handleMobileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMobile(e.target.value);
+    // Only allow digits and spaces
+    const value = e.target.value.replace(/[^\d\s]/g, '');
+    setMobile(value);
     // Reset result when user changes input
-    if (foundCandidate !== undefined) {
-      setFoundCandidate(undefined);
+    if (searchState !== 'idle') {
+      setSearchState('idle');
+      setFoundCandidate(null);
     }
   };
 
@@ -66,18 +86,31 @@ export default function ReprintIdCardPage() {
           <CardContent>
             <form onSubmit={handleSearch} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="mobile">अपना मोबाइल नंबर दर्ज करें</Label>
+                <Label htmlFor="mobile" className="flex items-center gap-2">
+                  <Phone className="h-4 w-4" />
+                  अपना मोबाइल नंबर दर्ज करें
+                </Label>
                 <Input
                   id="mobile"
                   type="tel"
+                  inputMode="numeric"
                   value={mobile}
                   onChange={handleMobileChange}
-                  placeholder="जैसे: 03001234567"
+                  placeholder="जैसे: 6392708274"
+                  maxLength={10}
                   disabled={isPending}
                   required
                 />
+                <p className="text-xs text-muted-foreground">
+                  10 अंकों का मोबाइल नंबर दर्ज करें (जैसे: 6392708274)
+                </p>
               </div>
-              <Button type="submit" className="w-full" size="lg" disabled={isPending || !mobile.trim()}>
+              <Button
+                type="submit"
+                className="w-full"
+                size="lg"
+                disabled={isPending || !mobile.trim()}
+              >
                 {isPending ? (
                   <span className="flex items-center gap-2">
                     <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
@@ -95,17 +128,37 @@ export default function ReprintIdCardPage() {
         </Card>
 
         {/* Not Found Message */}
-        {foundCandidate === null && (
+        {searchState === 'not_found' && (
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
             <AlertDescription className="font-medium">
-              इस मोबाइल नंबर से कोई प्रवेश नहीं मिला।
+              इस मोबाइल नंबर से कोई प्रवेश नहीं मिला। कृपया सही मोबाइल नंबर दर्ज करें जो आवेदन के समय उपयोग किया गया था।
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {/* Authorization Error - backend requires admin for this lookup */}
+        {searchState === 'auth_error' && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription className="font-medium">
+              यह सेवा अभी उपलब्ध नहीं है। कृपया व्यवस्थापक से संपर्क करें।
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {/* Generic Error */}
+        {searchState === 'error' && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription className="font-medium">
+              खोज में त्रुटि हुई। कृपया पुनः प्रयास करें।
             </AlertDescription>
           </Alert>
         )}
 
         {/* Found Candidate - Show ID Card */}
-        {foundCandidate && (
+        {searchState === 'found' && foundCandidate && (
           <div className="space-y-6">
             <Alert>
               <Info className="h-4 w-4" />

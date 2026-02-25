@@ -1,29 +1,25 @@
 import Map "mo:core/Map";
 import Array "mo:core/Array";
+import Iter "mo:core/Iter";
 import Order "mo:core/Order";
 import Text "mo:core/Text";
 import Principal "mo:core/Principal";
 import Runtime "mo:core/Runtime";
-import Iter "mo:core/Iter";
 import Char "mo:core/Char";
 import Nat32 "mo:core/Nat32";
-import Nat "mo:core/Nat";
 import List "mo:core/List";
 import Storage "blob-storage/Storage";
 import MixinStorage "blob-storage/Mixin";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
-import Migration "migration";
 import Time "mo:core/Time";
 
-(with migration = Migration.run)
 actor {
   include MixinStorage();
 
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
 
-  // Data Types
   public type UserProfile = {
     name : Text;
   };
@@ -66,7 +62,14 @@ actor {
   var superAdmin : ?Principal = null;
   var admissionCounter = 0;
 
-  // Mobile number validation: Only 10 digit Indian numbers
+  func normalizeMobileNumber(mobile : Text) : Text {
+    let trimmed = mobile.trim(#predicate(Char.isWhitespace));
+    let digitsOnly = Text.fromArray(
+      trimmed.toArray().filter(func(c) { c.toNat32() >= 48 and c.toNat32() <= 57 })
+    );
+    if (digitsOnly.size() == 10) { digitsOnly } else { trimmed };
+  };
+
   func isValidIndianMobileNumber(mobile : Text) : Bool {
     if (mobile.size() != 10) {
       return false;
@@ -80,7 +83,6 @@ actor {
     true;
   };
 
-  // Admin management
   public type AdminResponse = {
     principal : Principal;
     isSuperAdmin : Bool;
@@ -203,17 +205,15 @@ actor {
   };
 
   public type SubmitAdmissionFormResult = {
-    #ok : Text; // Return admission ID on success
+    #ok : Text;
     #err : SubmitAdmissionFormError;
   };
 
   public type SubmitAdmissionFormError = {
     #invalidMobileNumber;
-    #mobileAlreadyRegistered : Text; // Return existing admission ID
+    #mobileAlreadyRegistered : Text;
   };
 
-  // submitAdmissionForm is intentionally open to all callers (including anonymous/guests)
-  // so that candidates can submit the admission form without needing an account.
   public shared ({ caller }) func submitAdmissionForm(
     fullName : Text,
     fatherName : Text,
@@ -223,19 +223,18 @@ actor {
     address : Text,
     photo : ?Storage.ExternalBlob,
   ) : async SubmitAdmissionFormResult {
-    // Validate mobile number (Indian 10-digit)
-    if (not isValidIndianMobileNumber(mobile)) {
+    let normalizedMobile = normalizeMobileNumber(mobile);
+
+    if (not isValidIndianMobileNumber(normalizedMobile)) {
       return #err(#invalidMobileNumber);
     };
 
-    // Check for existing candidate by mobile number and return admission ID if found
     for ((_, candidate) in candidates.entries()) {
-      if (candidate.mobile == mobile) {
+      if (candidate.mobile == normalizedMobile) {
         return #err(#mobileAlreadyRegistered(candidate.admissionID));
       };
     };
 
-    // Increment admission counter and generate admission ID
     admissionCounter += 1;
     let currentYear = 2024;
     let serialString = debug_show (admissionCounter);
@@ -244,6 +243,9 @@ actor {
       let textChars = text.toArray();
       let charCount = textChars.size();
       let padCount = 5 - charCount;
+      if (padCount <= 0) {
+        return text;
+      };
       let zeros = Array.tabulate(padCount, func(_) { '0' });
       let paddedChars = zeros.concat(textChars);
       Text.fromArray(paddedChars);
@@ -252,12 +254,11 @@ actor {
     let paddedSerial = zeroPad(serialString);
     let admissionID = currentYear.toText().concat("0").concat(paddedSerial);
 
-    // Create and store candidate
     let candidate : Candidate = {
       fullName;
       fatherName;
       dateOfBirth;
-      mobile;
+      mobile = normalizedMobile;
       lastQualification;
       address;
       createdAt = Time.now();
@@ -276,14 +277,15 @@ actor {
     candidates.values().toArray().sort();
   };
 
-  // getCandidateByMobile exposes full PII (address, DOB, father's name, photo).
-  // Restricted to admins only to protect candidate privacy.
   public query ({ caller }) func getCandidateByMobile(mobile : Text) : async ?Candidate {
     if (not AccessControl.isAdmin(accessControlState, caller)) {
       Runtime.trap("Unauthorized: Only admins can look up candidates by mobile number");
     };
+
+    let normalizedMobile = normalizeMobileNumber(mobile);
+
     for ((_, candidate) in candidates.entries()) {
-      if (candidate.mobile == mobile) {
+      if (candidate.mobile == normalizedMobile) {
         return ?candidate;
       };
     };
