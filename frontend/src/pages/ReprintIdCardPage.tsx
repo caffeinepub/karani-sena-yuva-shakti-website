@@ -9,7 +9,7 @@ import AdmissionCard from '../components/AdmissionCard';
 import { useGetCandidateByMobile } from '../hooks/useGetCandidateByMobile';
 import { Candidate } from '../backend';
 
-type SearchState = 'idle' | 'not_found' | 'found' | 'auth_error' | 'error';
+type SearchState = 'idle' | 'not_found' | 'found' | 'error';
 
 export default function ReprintIdCardPage() {
   const [mobile, setMobile] = useState('');
@@ -35,22 +35,15 @@ export default function ReprintIdCardPage() {
           setSearchState('not_found');
         }
       },
-      onError: (err: unknown) => {
-        const message = err instanceof Error ? err.message : String(err);
-        if (message === 'UNAUTHORIZED') {
-          setSearchState('auth_error');
-        } else {
-          setSearchState('error');
-        }
+      onError: () => {
+        setSearchState('error');
       },
     });
   };
 
   const handleMobileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Only allow digits and spaces
     const value = e.target.value.replace(/[^\d\s]/g, '');
     setMobile(value);
-    // Reset result when user changes input
     if (searchState !== 'idle') {
       setSearchState('idle');
       setFoundCandidate(null);
@@ -132,17 +125,7 @@ export default function ReprintIdCardPage() {
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
             <AlertDescription className="font-medium">
-              इस मोबाइल नंबर से कोई प्रवेश नहीं मिला। कृपया सही मोबाइल नंबर दर्ज करें जो आवेदन के समय उपयोग किया गया था।
-            </AlertDescription>
-          </Alert>
-        )}
-
-        {/* Authorization Error - backend requires admin for this lookup */}
-        {searchState === 'auth_error' && (
-          <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription className="font-medium">
-              यह सेवा अभी उपलब्ध नहीं है। कृपया व्यवस्थापक से संपर्क करें।
+              यह नंबर registered नहीं है। कृपया वही मोबाइल नंबर दर्ज करें जो आवेदन के समय उपयोग किया गया था।
             </AlertDescription>
           </Alert>
         )}

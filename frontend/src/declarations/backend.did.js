@@ -29,7 +29,13 @@ export const AdminResponse = IDL.Record({
   'principal' : IDL.Principal,
   'isSuperAdmin' : IDL.Bool,
 });
+export const CandidateStatus = IDL.Variant({
+  'pending' : IDL.Null,
+  'approved' : IDL.Null,
+  'rejected' : IDL.Null,
+});
 export const Candidate = IDL.Record({
+  'status' : CandidateStatus,
   'lastQualification' : IDL.Text,
   'dateOfBirth' : IDL.Text,
   'createdAt' : IDL.Int,
@@ -91,6 +97,7 @@ export const idlService = IDL.Service({
   'addGalleryItem' : IDL.Func([ExternalBlob, IDL.Text], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'createNewsItem' : IDL.Func([IDL.Text, IDL.Text, IDL.Int], [], []),
+  'deleteCandidate' : IDL.Func([IDL.Text], [IDL.Bool], []),
   'deleteGalleryItem' : IDL.Func([IDL.Text], [], []),
   'deleteNewsItem' : IDL.Func([IDL.Text], [], []),
   'editNewsItem' : IDL.Func([IDL.Text, IDL.Text, IDL.Int], [], []),
@@ -102,6 +109,16 @@ export const idlService = IDL.Service({
   'getCandidateByMobile' : IDL.Func(
       [IDL.Text],
       [IDL.Opt(Candidate)],
+      ['query'],
+    ),
+  'getCandidateByMobileAdmin' : IDL.Func(
+      [IDL.Text],
+      [IDL.Opt(Candidate)],
+      ['query'],
+    ),
+  'getCandidatesByStatus' : IDL.Func(
+      [CandidateStatus],
+      [IDL.Vec(Candidate)],
       ['query'],
     ),
   'getGalleryItems' : IDL.Func([], [IDL.Vec(GalleryItem)], ['query']),
@@ -126,6 +143,11 @@ export const idlService = IDL.Service({
         IDL.Opt(ExternalBlob),
       ],
       [SubmitAdmissionFormResult],
+      [],
+    ),
+  'updateCandidateStatus' : IDL.Func(
+      [IDL.Text, CandidateStatus],
+      [IDL.Bool],
       [],
     ),
 });
@@ -154,7 +176,13 @@ export const idlFactory = ({ IDL }) => {
     'principal' : IDL.Principal,
     'isSuperAdmin' : IDL.Bool,
   });
+  const CandidateStatus = IDL.Variant({
+    'pending' : IDL.Null,
+    'approved' : IDL.Null,
+    'rejected' : IDL.Null,
+  });
   const Candidate = IDL.Record({
+    'status' : CandidateStatus,
     'lastQualification' : IDL.Text,
     'dateOfBirth' : IDL.Text,
     'createdAt' : IDL.Int,
@@ -216,6 +244,7 @@ export const idlFactory = ({ IDL }) => {
     'addGalleryItem' : IDL.Func([ExternalBlob, IDL.Text], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'createNewsItem' : IDL.Func([IDL.Text, IDL.Text, IDL.Int], [], []),
+    'deleteCandidate' : IDL.Func([IDL.Text], [IDL.Bool], []),
     'deleteGalleryItem' : IDL.Func([IDL.Text], [], []),
     'deleteNewsItem' : IDL.Func([IDL.Text], [], []),
     'editNewsItem' : IDL.Func([IDL.Text, IDL.Text, IDL.Int], [], []),
@@ -227,6 +256,16 @@ export const idlFactory = ({ IDL }) => {
     'getCandidateByMobile' : IDL.Func(
         [IDL.Text],
         [IDL.Opt(Candidate)],
+        ['query'],
+      ),
+    'getCandidateByMobileAdmin' : IDL.Func(
+        [IDL.Text],
+        [IDL.Opt(Candidate)],
+        ['query'],
+      ),
+    'getCandidatesByStatus' : IDL.Func(
+        [CandidateStatus],
+        [IDL.Vec(Candidate)],
         ['query'],
       ),
     'getGalleryItems' : IDL.Func([], [IDL.Vec(GalleryItem)], ['query']),
@@ -251,6 +290,11 @@ export const idlFactory = ({ IDL }) => {
           IDL.Opt(ExternalBlob),
         ],
         [SubmitAdmissionFormResult],
+        [],
+      ),
+    'updateCandidateStatus' : IDL.Func(
+        [IDL.Text, CandidateStatus],
+        [IDL.Bool],
         [],
       ),
   });

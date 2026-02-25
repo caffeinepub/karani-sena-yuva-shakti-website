@@ -15,6 +15,7 @@ export interface AdminResponse {
   'isSuperAdmin' : boolean,
 }
 export interface Candidate {
+  'status' : CandidateStatus,
   'lastQualification' : string,
   'dateOfBirth' : string,
   'createdAt' : bigint,
@@ -25,6 +26,9 @@ export interface Candidate {
   'mobile' : string,
   'photo' : [] | [ExternalBlob],
 }
+export type CandidateStatus = { 'pending' : null } |
+  { 'approved' : null } |
+  { 'rejected' : null };
 export type ExternalBlob = Uint8Array;
 export interface GalleryItem { 'description' : string, 'image' : ExternalBlob }
 export interface NewsItem {
@@ -72,6 +76,7 @@ export interface _SERVICE {
   'addGalleryItem' : ActorMethod<[ExternalBlob, string], undefined>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'createNewsItem' : ActorMethod<[string, string, bigint], undefined>,
+  'deleteCandidate' : ActorMethod<[string], boolean>,
   'deleteGalleryItem' : ActorMethod<[string], undefined>,
   'deleteNewsItem' : ActorMethod<[string], undefined>,
   'editNewsItem' : ActorMethod<[string, string, bigint], undefined>,
@@ -81,6 +86,8 @@ export interface _SERVICE {
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getCandidateByMobile' : ActorMethod<[string], [] | [Candidate]>,
+  'getCandidateByMobileAdmin' : ActorMethod<[string], [] | [Candidate]>,
+  'getCandidatesByStatus' : ActorMethod<[CandidateStatus], Array<Candidate>>,
   'getGalleryItems' : ActorMethod<[], Array<GalleryItem>>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
   'initializeSuperAdmin' : ActorMethod<[], boolean>,
@@ -92,6 +99,7 @@ export interface _SERVICE {
     [string, string, string, string, string, string, [] | [ExternalBlob]],
     SubmitAdmissionFormResult
   >,
+  'updateCandidateStatus' : ActorMethod<[string, CandidateStatus], boolean>,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

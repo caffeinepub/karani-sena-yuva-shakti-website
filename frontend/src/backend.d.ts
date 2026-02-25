@@ -22,6 +22,7 @@ export type SubmitAdmissionFormResult = {
     err: SubmitAdmissionFormError;
 };
 export interface Candidate {
+    status: CandidateStatus;
     lastQualification: string;
     dateOfBirth: string;
     createdAt: bigint;
@@ -55,6 +56,11 @@ export interface NewsItem {
 export interface UserProfile {
     name: string;
 }
+export enum CandidateStatus {
+    pending = "pending",
+    approved = "approved",
+    rejected = "rejected"
+}
 export enum UserRole {
     admin = "admin",
     user = "user",
@@ -65,6 +71,7 @@ export interface backendInterface {
     addGalleryItem(image: ExternalBlob, description: string): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     createNewsItem(title: string, content: string, createdAt: bigint): Promise<void>;
+    deleteCandidate(admissionId: string): Promise<boolean>;
     deleteGalleryItem(description: string): Promise<void>;
     deleteNewsItem(title: string): Promise<void>;
     editNewsItem(title: string, content: string, createdAt: bigint): Promise<void>;
@@ -74,6 +81,8 @@ export interface backendInterface {
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
     getCandidateByMobile(mobile: string): Promise<Candidate | null>;
+    getCandidateByMobileAdmin(mobile: string): Promise<Candidate | null>;
+    getCandidatesByStatus(status: CandidateStatus): Promise<Array<Candidate>>;
     getGalleryItems(): Promise<Array<GalleryItem>>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     initializeSuperAdmin(): Promise<boolean>;
@@ -82,4 +91,5 @@ export interface backendInterface {
     resetAdminSystemForce(): Promise<void>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     submitAdmissionForm(fullName: string, fatherName: string, dateOfBirth: string, mobile: string, lastQualification: string, address: string, photo: ExternalBlob | null): Promise<SubmitAdmissionFormResult>;
+    updateCandidateStatus(admissionId: string, newStatus: CandidateStatus): Promise<boolean>;
 }

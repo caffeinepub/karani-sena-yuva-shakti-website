@@ -1,45 +1,27 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Candidate registration portal with admin ID system. Fixing ID retrieval bug where registered candidates cannot find their ID using mobile number search.",
+  "summary": "Member management application with Admin Login and ID Card generation. Currently fixing a duplicate serial number bug where multiple members can receive the same numeric serial number (e.g., 2023000004 and 2024000004 both ending in 000004).",
   "architectural_notes": [
-    "Candidate registration form data and ID retrieve system must use the same database",
-    "Admin portal IDs (e.g., 2023000008) must be searchable by mobile number"
+    "Serial numbers must be globally unique across all members, not just within the same year"
   ],
   "known_issues": [
-    "Mobile number search for ID retrieval returns 'no entry found' even for registered candidates — data saved in old format instead of admin portal database"
+    "Duplicate serial number bug: members can receive the same numeric suffix (e.g., 000004) even with different year prefixes"
   ],
   "isFixRequest": true,
-  "existing_features": [
-    {
-      "id": "feature-update-the-usegetcandidatebymobile-frontend-hook-and-the-reprintidcardpage-to-correctly-pass-the-normalized-mobile-number-to-the-backend-and-display-the-admission-card-with-the-backend-assigned-admission-id-upon-a-successful-match-if-no-match-is-found-display-the-hindi-error-message",
-      "title": "Update the `useGetCandidateByMobile` frontend hook and the `ReprintIdCardPage` to correctly pass the normalized mobile number to the backend and display the admission card with the backend-assigned admission ID upon a successful match. If no match is found, display the Hindi error message 'इस मोबाइल नंबर से कोई प्रवेश नहीं मिला।'",
-      "reqIds": [
-        "REQ-3"
-      ],
-      "version": 1
-    }
-  ],
+  "existing_features": [],
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Fix the backend `getCandidateByMobile` function so that it searches all registered candidates stored in the main candidates stable data structure. The search must be case-insensitive and match the exact 10-digit mobile number. Any candidate who submitted the admission form (regardless of when or how their data was saved) must be retrievable by their registered mobile number.",
+      "summary": "Fix the serial number (admission ID) generation logic in the backend so that every member receives a globally unique serial number. The current bug allows two members to share the same numeric suffix (e.g., Kunwar Akhand Pratap Singh has 2023000004 and Sonu Singh has 2024000004 — both ending in 000004). The new logic must ensure the sequential counter is shared across all members regardless of year prefix, so no two members ever get the same trailing numeric part. The counter must be stored as a single stable value in the actor state and incremented atomically on each new registration.",
       "reqIds": [
         "REQ-1"
-      ],
-      "status": "pending"
-    },
-    {
-      "id": "AR-2",
-      "summary": "Ensure that when a candidate submits the admission form, their mobile number is stored in exactly the same format (normalized, trimmed, no spaces or country code prefix) as the format used during mobile number lookup in `getCandidateByMobile`. Both the submission path and the search path must use identical normalization logic.",
-      "reqIds": [
-        "REQ-2"
       ],
       "status": "pending"
     }
   ],
   "gameProjectType": "none",
-  "projectName": "Karni Sena Yuva Shakti",
+  "projectName": "Fix duplicate serial number bug in member registration",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

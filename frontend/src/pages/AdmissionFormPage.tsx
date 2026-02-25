@@ -5,9 +5,8 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Info, Loader2, AlertCircle } from 'lucide-react';
+import { Info, Loader2, AlertCircle, Clock } from 'lucide-react';
 import ImageUploadField from '../components/ImageUploadField';
-import AdmissionCard from '../components/AdmissionCard';
 import { useSubmitAdmissionForm, MobileAlreadyRegisteredError } from '../hooks/useSubmitAdmissionForm';
 import { ExternalBlob } from '../backend';
 
@@ -177,24 +176,65 @@ export default function AdmissionFormPage() {
     return (
       <div className="container py-16">
         <div className="max-w-4xl mx-auto space-y-6">
-          <Alert className="print:hidden">
-            <Info className="h-4 w-4" />
-            <AlertDescription>
-              {submissionData.isExisting
-                ? 'यह मोबाइल नंबर पहले से पंजीकृत है। आपका प्रवेश पत्र नीचे दिए गए प्रिंट बटन से प्रिंट करें।'
-                : 'आपका आवेदन सफलतापूर्वक जमा हो गया है। कृपया अपने रिकॉर्ड के लिए इस प्रवेश पत्र को सहेजें या प्रिंट करें।'}
-            </AlertDescription>
-          </Alert>
+          {submissionData.isExisting ? (
+            <Alert className="print:hidden">
+              <Info className="h-4 w-4" />
+              <AlertDescription>
+                यह मोबाइल नंबर पहले से पंजीकृत है। आपका प्रवेश पत्र नीचे दिए गए प्रिंट बटन से प्रिंट करें।
+              </AlertDescription>
+            </Alert>
+          ) : (
+            <Alert className="print:hidden border-warning/30 bg-warning/10">
+              <Clock className="h-4 w-4 text-warning" />
+              <AlertDescription>
+                <strong>आपका आवेदन सफलतापूर्वक जमा हो गया है!</strong> आपका आवेदन अभी <strong>pending</strong> है। Admin द्वारा approve होने के बाद आपका ID Card जारी किया जाएगा। अपना आवेदन नंबर नोट करें: <strong>{submissionData.admissionID}</strong>
+              </AlertDescription>
+            </Alert>
+          )}
 
-          <AdmissionCard
-            admissionID={submissionData.admissionID}
-            fullName={formData.fullName}
-            fatherName={formData.fatherName}
-            dateOfBirth={formData.dateOfBirth}
-            mobile={formData.mobile}
-            photo={photo}
-            submittedDate={submissionData.submittedDate}
-          />
+          {/* Show a pending notice card instead of the full ID card for new submissions */}
+          {!submissionData.isExisting ? (
+            <div className="flex justify-center">
+              <Card className="w-full max-w-md border-warning/30">
+                <CardContent className="py-10 text-center space-y-4">
+                  <div className="flex justify-center">
+                    <div className="rounded-full bg-warning/10 p-5">
+                      <Clock className="h-12 w-12 text-warning" />
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-foreground">आवेदन प्राप्त हुआ</h3>
+                    <p className="text-muted-foreground mt-2 text-sm">
+                      आपका आवेदन admin की समीक्षा के लिए भेज दिया गया है।
+                    </p>
+                  </div>
+                  <div className="bg-muted rounded-lg p-4">
+                    <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide mb-1">आवेदन संख्या</p>
+                    <p className="text-2xl font-bold font-mono text-primary">{submissionData.admissionID}</p>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Admin द्वारा approve होने के बाद आप अपना ID Card <strong>/reprint</strong> पेज से प्रिंट कर सकते हैं।
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          ) : (
+            // For existing registrations, show the full admission card for reprinting
+            <div className="flex justify-center">
+              <Card className="w-full max-w-md">
+                <CardContent className="py-10 text-center space-y-4">
+                  <div className="bg-muted rounded-lg p-4">
+                    <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide mb-1">आवेदन संख्या</p>
+                    <p className="text-2xl font-bold font-mono text-primary">{submissionData.admissionID}</p>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    यह नंबर पहले से पंजीकृत है। ID Card reprint के लिए <strong>/reprint</strong> पेज पर जाएं।
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
           <div className="text-center mt-8 print:hidden">
             <Button onClick={handleNewApplication} variant="outline" size="lg">
               नया आवेदन जमा करें

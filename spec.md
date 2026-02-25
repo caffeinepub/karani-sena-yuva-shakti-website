@@ -1,11 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Fix the mobile number search on the reprint ID card page so that registered candidates can successfully retrieve their admission card instead of seeing "इस मोबाइल नंबर से कोई प्रवेश नहीं मिला।"
+**Goal:** Fix the duplicate serial number (admission ID) bug in the backend so that every member receives a globally unique serial number.
 
 **Planned changes:**
-- Fix the backend `getCandidateByMobile` function to search the same stable candidates map used by the admin portal, with normalized (trimmed, no spaces, no country code) 10-digit mobile number matching
-- Ensure mobile numbers are stored in the same normalized format at registration time as is used during lookup, so both paths use identical normalization logic
-- Update the `useGetCandidateByMobile` frontend hook and `ReprintIdCardPage` to pass the normalized mobile number to the backend and display the correct admission card with the backend-assigned admission ID on a successful match
+- Replace the per-year counter logic with a single global counter stored in actor state that increments atomically on each new member registration
+- On actor initialization, scan all existing member records to find the highest numeric suffix already in use and set the global counter above it, preventing future collisions with existing entries like 2023000004 and 2024000004
+- Keep the serial number display format unchanged: YYYY (year of registration) + 6-digit zero-padded global counter
 
-**User-visible outcome:** A candidate entering their registered mobile number (e.g. 6392708274) on the reprint page and pressing "खोजें" will see their admission card with the correct ID, and the error message only appears for genuinely unregistered numbers.
+**User-visible outcome:** Every newly registered member receives a unique serial number. No two members will ever share the same numeric suffix, even if registered in different years.

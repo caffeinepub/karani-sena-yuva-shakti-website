@@ -13,7 +13,9 @@ import MixinStorage "blob-storage/Mixin";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
 import Time "mo:core/Time";
+import Migration "migration";
 
+(with migration = Migration.run)
 actor {
   include MixinStorage();
 
@@ -22,6 +24,12 @@ actor {
 
   public type UserProfile = {
     name : Text;
+  };
+
+  public type CandidateStatus = {
+    #pending;
+    #approved;
+    #rejected;
   };
 
   public type Candidate = {
@@ -33,6 +41,7 @@ actor {
     address : Text;
     createdAt : Int;
     admissionID : Text;
+    status : CandidateStatus;
     photo : ?Storage.ExternalBlob;
   };
 
@@ -264,6 +273,7 @@ actor {
       createdAt = Time.now();
       admissionID;
       photo;
+      status = #pending;
     };
 
     candidates.add(admissionID, candidate);
@@ -277,7 +287,22 @@ actor {
     candidates.values().toArray().sort();
   };
 
-  public query ({ caller }) func getCandidateByMobile(mobile : Text) : async ?Candidate {
+  // Public endpoint: allows anyone to look up their own candidate record by mobile number.
+  // This is intentionally unauthenticated so that users can reprint their ID card
+  // without needing to log in. Only the candidate's own data is returned (matched by mobile).
+  public query func getCandidateByMobile(mobile : Text) : async ?Candidate {
+    let normalizedMobile = normalizeMobileNumber(mobile);
+
+    for ((_, candidate) in candidates.entries()) {
+      if (candidate.mobile == normalizedMobile) {
+        return ?candidate;
+      };
+    };
+    null;
+  };
+
+  // Admin-only endpoint for looking up candidates by mobile (e.g. for admin panel search).
+  public query ({ caller }) func getCandidateByMobileAdmin(mobile : Text) : async ?Candidate {
     if (not AccessControl.isAdmin(accessControlState, caller)) {
       Runtime.trap("Unauthorized: Only admins can look up candidates by mobile number");
     };
@@ -347,5 +372,41 @@ actor {
 
   public query func getAllNewsItems() : async [NewsItem] {
     newsItems.values().toArray();
+  };
+
+  public shared ({ caller }) func deleteCandidate(admissionId : Text) : async Bool {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
+      Runtime.trap("Unauthorized: Only admins can delete candidate records");
+    };
+    switch (candidates.get(admissionId)) {
+      case (null) { false };
+      case (?_) {
+        candidates.remove(admissionId);
+        true;
+      };
+    };
+  };
+
+  // New method to fetch candidates by status (pending, approved, rejected)
+  public query ({ caller }) func getCandidatesByStatus(status : CandidateStatus) : async [Candidate] {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
+      Runtime.trap("Unauthorized: Only admins can view candidates by status");
+    };
+    candidates.values().toArray().filter(func(c) { c.status == status });
+  };
+
+  // New method to update candidate status (approve/reject)
+  public shared ({ caller }) func updateCandidateStatus(admissionId : Text, newStatus : CandidateStatus) : async Bool {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
+      Runtime.trap("Unauthorized: Only admins can update candidate status");
+    };
+    switch (candidates.get(admissionId)) {
+      case (null) { false };
+      case (?candidate) {
+        let updatedCandidate = { candidate with status = newStatus };
+        candidates.add(admissionId, updatedCandidate);
+        true;
+      };
+    };
   };
 };

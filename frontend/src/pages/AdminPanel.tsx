@@ -3,10 +3,12 @@ import AdminCandidatesList from '../components/AdminCandidatesList';
 import AdminGalleryManager from '../components/AdminGalleryManager';
 import AdminNewsManager from '../components/AdminNewsManager';
 import AdminManagementSection from '../components/AdminManagementSection';
+import AdminDeleteRecordsSection from '../components/AdminDeleteRecordsSection';
+import AdminPendingRequestsSection from '../components/AdminPendingRequestsSection';
 import { cn } from '@/lib/utils';
-import { Users, Image, Newspaper, Shield } from 'lucide-react';
+import { Users, Image, Newspaper, Shield, Trash2, Clock } from 'lucide-react';
 
-type AdminSection = 'candidates' | 'gallery' | 'news' | 'admins';
+type AdminSection = 'pending' | 'candidates' | 'gallery' | 'news' | 'admins' | 'delete';
 
 interface MenuItem {
   id: AdminSection;
@@ -15,17 +17,21 @@ interface MenuItem {
 }
 
 const menuItems: MenuItem[] = [
+  { id: 'pending', label: 'Pending Requests', icon: <Clock className="h-5 w-5" /> },
   { id: 'candidates', label: 'Admission Applications', icon: <Users className="h-5 w-5" /> },
   { id: 'gallery', label: 'Photo Gallery', icon: <Image className="h-5 w-5" /> },
   { id: 'news', label: 'News & Updates', icon: <Newspaper className="h-5 w-5" /> },
   { id: 'admins', label: 'Manage Admins', icon: <Shield className="h-5 w-5" /> },
+  { id: 'delete', label: 'Delete Records', icon: <Trash2 className="h-5 w-5" /> },
 ];
 
 export default function AdminPanel() {
-  const [activeSection, setActiveSection] = useState<AdminSection>('candidates');
+  const [activeSection, setActiveSection] = useState<AdminSection>('pending');
 
   const renderContent = () => {
     switch (activeSection) {
+      case 'pending':
+        return <AdminPendingRequestsSection />;
       case 'candidates':
         return <AdminCandidatesList />;
       case 'gallery':
@@ -34,8 +40,10 @@ export default function AdminPanel() {
         return <AdminNewsManager />;
       case 'admins':
         return <AdminManagementSection />;
+      case 'delete':
+        return <AdminDeleteRecordsSection />;
       default:
-        return <AdminCandidatesList />;
+        return <AdminPendingRequestsSection />;
     }
   };
 
@@ -59,7 +67,10 @@ export default function AdminPanel() {
                   'hover:bg-accent hover:text-accent-foreground',
                   activeSection === item.id
                     ? 'bg-primary text-primary-foreground hover:bg-primary/90'
-                    : 'text-muted-foreground'
+                    : 'text-muted-foreground',
+                  item.id === 'delete' && activeSection !== 'delete'
+                    ? 'hover:bg-destructive/10 hover:text-destructive'
+                    : ''
                 )}
               >
                 {item.icon}

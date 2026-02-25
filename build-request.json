@@ -1,12 +1,11 @@
 {
   "kind": "build_request",
-  "title": "Fix mobile number search returning 'no entry found' for registered candidates",
-  "projectName": "Karni Sena Yuva Shakti",
+  "title": "Fix duplicate serial number bug in member registration",
   "priority": "high",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Fix the backend `getCandidateByMobile` function so that it searches all registered candidates stored in the main candidates stable data structure. The search must be case-insensitive and match the exact 10-digit mobile number. Any candidate who submitted the admission form (regardless of when or how their data was saved) must be retrievable by their registered mobile number.",
+      "text": "Fix the serial number (admission ID) generation logic in the backend so that every member receives a globally unique serial number. The current bug allows two members to share the same numeric suffix (e.g., Kunwar Akhand Pratap Singh has 2023000004 and Sonu Singh has 2024000004 — both ending in 000004). The new logic must ensure the sequential counter is shared across all members regardless of year prefix, so no two members ever get the same trailing numeric part. The counter must be stored as a single stable value in the actor state and incremented atomically on each new registration.",
       "target": "backend",
       "source": {
         "messageIds": [
@@ -14,66 +13,28 @@
           "msg-2"
         ],
         "quotes": [
-          "इस मोबाइल नंबर से कोई प्रवेश नहीं मिला।",
-          "जब candidate form submit करे, तो उसका mobile number admin portal के same database में save हो",
-          "ID retrieve करते समय उसी database से search हो"
+          "Last ka serial no. Double ho ja raha hai",
+          "Kunwar Akhand Pratap Singh को 2023000004 और Sonu Singh को 2024000004 serial number मिला है — दोनों का last part 000004 same है, यही duplicate bug है"
         ]
       },
       "acceptanceCriteria": [
-        "Searching mobile number 6392708274 (or any registered candidate's mobile) on the reprint page returns the candidate's admission card instead of 'no entry found'",
-        "The getCandidateByMobile backend function queries the same stable candidates map used by the admin portal",
-        "Mobile number lookup returns the correct backend-assigned admission ID (e.g., 2023000008 format)",
-        "Candidates registered both before and after this fix are discoverable by mobile number"
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "text": "Ensure that when a candidate submits the admission form, their mobile number is stored in exactly the same format (normalized, trimmed, no spaces or country code prefix) as the format used during mobile number lookup in `getCandidateByMobile`. Both the submission path and the search path must use identical normalization logic.",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-1",
-          "msg-2"
-        ],
-        "quotes": [
-          "Candidate registration form का data और ID retrieve system एक ही database से connected होगा",
-          "Mobile number से search करने पर registered candidate की ID सही से मिलेगी"
-        ]
-      },
-      "acceptanceCriteria": [
-        "A mobile number entered during registration can be found with the same number entered in the reprint search",
-        "Mobile numbers with leading/trailing spaces or inconsistent formatting are normalized before storage and before lookup",
-        "No new registration results in a 'no entry found' error on the reprint page"
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "text": "Update the `useGetCandidateByMobile` frontend hook and the `ReprintIdCardPage` to correctly pass the normalized mobile number to the backend and display the admission card with the backend-assigned admission ID upon a successful match. If no match is found, display the Hindi error message 'इस मोबाइल नंबर से कोई प्रवेश नहीं मिला।'",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "इस मोबाइल नंबर से कोई प्रवेश नहीं मिला।"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Entering a registered mobile number on the reprint page and pressing 'खोजें' shows the AdmissionCard component with the correct backend ID",
-        "The error message 'इस मोबाइल नंबर से कोई प्रवेश नहीं मिला।' only appears for genuinely unregistered mobile numbers",
-        "The displayed admission ID on the reprint card matches the ID shown in the admin portal for the same candidate"
+        "No two members in the system share the same numeric suffix in their serial number.",
+        "Each new member registration increments a single global counter and uses it as the serial number suffix.",
+        "Existing members with serial numbers 2023000004 and 2024000004 (or any other duplicates) are detected and the counter is initialized to a value higher than the highest existing suffix to prevent future collisions.",
+        "Serial number format continues to follow the pattern YYYYxxxxxx (year prefix + zero-padded global counter).",
+        "Concurrent registrations do not produce duplicate serial numbers."
       ]
     }
   ],
   "constraints": [
-    "Do not change the admin portal candidate list or the admission ID generation format",
-    "Do not break existing authenticated admin functionality",
-    "All candidate data must remain in the single Motoko actor's stable storage"
+    "Do not change the serial number display format (YYYY + 6-digit zero-padded counter).",
+    "Existing member records must not be deleted or have their serial numbers changed automatically — only the counter initialization logic should account for them.",
+    "All backend logic must remain in the single main actor (backend/main.mo)."
   ],
   "nonGoals": [
-    "Migrating or deleting old candidate records",
-    "Adding new fields to the candidate data model",
-    "Changing the visual design of the reprint page"
+    "Retroactively renumbering or reassigning serial numbers to existing members.",
+    "Changing any frontend UI components or layouts.",
+    "Adding new features unrelated to serial number uniqueness."
   ],
   "imageRequirements": {
     "required": [],

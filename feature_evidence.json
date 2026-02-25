@@ -1,26 +1,4 @@
 {
   "kind": "feature_evidence_report",
-  "features": [
-    {
-      "featureId": "feature-update-the-usegetcandidatebymobile-frontend-hook-and-the-reprintidcardpage-to-correctly-pass-the-normalized-mobile-number-to-the-backend-and-display-the-admission-card-with-the-backend-assigned-admission-id-upon-a-successful-match-if-no-match-is-found-display-the-hindi-error-message",
-      "featureTitle": "Update the `useGetCandidateByMobile` frontend hook and the `ReprintIdCardPage` to correctly pass the normalized mobile number to the backend and display the admission card with the backend-assigned admission ID upon a successful match. If no match is found, display the Hindi error message 'इस मोबाइल नंबर से कोई प्रवेश नहीं मिला।'",
-      "files": [
-        "frontend/src/hooks/useGetCandidateByMobile.ts",
-        "frontend/src/pages/ReprintIdCardPage.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-3"
-      ],
-      "confidence": "high"
-    }
-  ]
+  "features": []
 }

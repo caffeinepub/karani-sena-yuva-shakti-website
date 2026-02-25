@@ -1,28 +1,6 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Fix mobile number search returning 'no entry found' for registered candidates",
-  "requirements": [
-    {
-      "id": "REQ-3",
-      "summary": "Update the frontend hook and reprint page to correctly pass normalized mobile number to backend and display admission card with backend-assigned ID or show Hindi error message",
-      "acceptanceCriteria": [
-        "Entering a registered mobile number on the reprint page and pressing 'खोजें' shows the AdmissionCard component with the correct backend ID",
-        "The error message 'इस मोबाइल नंबर से कोई प्रवेश नहीं मिला।' only appears for genuinely unregistered mobile numbers",
-        "The displayed admission ID on the reprint card matches the ID shown in the admin portal for the same candidate"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useGetCandidateByMobile.ts",
-          "operation": "modify",
-          "description": "Ensure the mutation passes a normalized mobile number (trimmed, no spaces, no country code prefix) to the backend getCandidateByMobile method. Apply the same normalization logic that the backend uses during candidate registration to guarantee consistent formatting."
-        },
-        {
-          "path": "frontend/src/pages/ReprintIdCardPage.tsx",
-          "operation": "modify",
-          "description": "Normalize the mobile number input (trim whitespace, remove any non-digit characters except the core 10 digits) before calling the useGetCandidateByMobile mutation. On successful retrieval, pass the returned Candidate object to the AdmissionCard component to display the backend-assigned admissionID. If the mutation returns null, display the Hindi error message 'इस मोबाइल नंबर से कोई प्रवेश नहीं मिला।' in the alert component. Ensure the displayed admission ID matches the format used in the admin portal."
-        }
-      ]
-    }
-  ]
+  "title": "Fix duplicate serial number bug in member registration",
+  "requirements": []
 }
