@@ -3,6 +3,7 @@ import { ThemeProvider } from 'next-themes';
 import HomePage from './pages/HomePage';
 import AdmissionFormPage from './pages/AdmissionFormPage';
 import AdminPanel from './pages/AdminPanel';
+import ReprintIdCardPage from './pages/ReprintIdCardPage';
 import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
 import ProfileSetupModal from './components/ProfileSetupModal';
@@ -39,7 +40,13 @@ const adminRoute = createRoute({
   ),
 });
 
-const routeTree = rootRoute.addChildren([indexRoute, admissionRoute, adminRoute]);
+const reprintRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/reprint',
+  component: ReprintIdCardPage,
+});
+
+const routeTree = rootRoute.addChildren([indexRoute, admissionRoute, adminRoute, reprintRoute]);
 
 const router = createRouter({ routeTree });
 
@@ -57,4 +64,3 @@ export default function App() {
     </ThemeProvider>
   );
 }
-

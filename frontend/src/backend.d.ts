@@ -14,6 +14,13 @@ export class ExternalBlob {
     static fromBytes(blob: Uint8Array<ArrayBuffer>): ExternalBlob;
     withUploadProgress(onProgress: (percentage: number) => void): ExternalBlob;
 }
+export type SubmitAdmissionFormResult = {
+    __kind__: "ok";
+    ok: null;
+} | {
+    __kind__: "err";
+    err: string;
+};
 export interface Candidate {
     lastQualification: string;
     dateOfBirth: string;
@@ -59,6 +66,7 @@ export interface backendInterface {
     getAllNewsItems(): Promise<Array<NewsItem>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
+    getCandidateByMobile(mobile: string): Promise<Candidate | null>;
     getGalleryItems(): Promise<Array<GalleryItem>>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     initializeSuperAdmin(): Promise<boolean>;
@@ -66,5 +74,5 @@ export interface backendInterface {
     removeAdmin(adminToRemove: Principal): Promise<boolean>;
     resetAdminSystemForce(): Promise<void>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
-    submitAdmissionForm(fullName: string, fatherName: string, dateOfBirth: string, mobile: string, lastQualification: string, address: string, photo: ExternalBlob | null): Promise<void>;
+    submitAdmissionForm(fullName: string, fatherName: string, dateOfBirth: string, mobile: string, lastQualification: string, address: string, photo: ExternalBlob | null): Promise<SubmitAdmissionFormResult>;
 }

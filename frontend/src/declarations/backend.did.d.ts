@@ -32,6 +32,8 @@ export interface NewsItem {
   'content' : string,
   'createdAt' : bigint,
 }
+export type SubmitAdmissionFormResult = { 'ok' : null } |
+  { 'err' : string };
 export interface UserProfile { 'name' : string }
 export type UserRole = { 'admin' : null } |
   { 'user' : null } |
@@ -76,6 +78,7 @@ export interface _SERVICE {
   'getAllNewsItems' : ActorMethod<[], Array<NewsItem>>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
+  'getCandidateByMobile' : ActorMethod<[string], [] | [Candidate]>,
   'getGalleryItems' : ActorMethod<[], Array<GalleryItem>>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
   'initializeSuperAdmin' : ActorMethod<[], boolean>,
@@ -85,7 +88,7 @@ export interface _SERVICE {
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
   'submitAdmissionForm' : ActorMethod<
     [string, string, string, string, string, string, [] | [ExternalBlob]],
-    undefined
+    SubmitAdmissionFormResult
   >,
 }
 export declare const idlService: IDL.ServiceClass;

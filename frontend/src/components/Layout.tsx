@@ -49,6 +49,9 @@ export default function Layout() {
             <Link to="/admission" className="text-sm font-medium transition-colors hover:text-primary">
               प्रवेश फॉर्म
             </Link>
+            <Link to="/reprint" className="text-sm font-medium transition-colors hover:text-primary">
+              ID कार्ड पुनः प्रिंट करें
+            </Link>
             {isAuthenticated && (
               <Link to="/admin" className="text-sm font-medium transition-colors hover:text-primary">
                 Admin
@@ -91,6 +94,13 @@ export default function Layout() {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 प्रवेश फॉर्म
+              </Link>
+              <Link
+                to="/reprint"
+                className="text-sm font-medium transition-colors hover:text-primary py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                ID कार्ड पुनः प्रिंट करें
               </Link>
               {isAuthenticated && (
                 <Link

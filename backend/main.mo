@@ -2,20 +2,17 @@ import Map "mo:core/Map";
 import Array "mo:core/Array";
 import Order "mo:core/Order";
 import Text "mo:core/Text";
-import Iter "mo:core/Iter";
 import Principal "mo:core/Principal";
 import Runtime "mo:core/Runtime";
+import Iter "mo:core/Iter";
 import Char "mo:core/Char";
-import Nat8 "mo:core/Nat8";
 import Nat32 "mo:core/Nat32";
 import Nat "mo:core/Nat";
+import List "mo:core/List";
 import Storage "blob-storage/Storage";
 import MixinStorage "blob-storage/Mixin";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
-import List "mo:core/List";
-
-
 
 actor {
   include MixinStorage();
@@ -27,7 +24,7 @@ actor {
     name : Text;
   };
 
-  type Candidate = {
+  public type Candidate = {
     fullName : Text;
     fatherName : Text;
     dateOfBirth : Text;
@@ -39,12 +36,12 @@ actor {
     photo : ?Storage.ExternalBlob;
   };
 
-  type GalleryItem = {
+  public type GalleryItem = {
     image : Storage.ExternalBlob;
     description : Text;
   };
 
-  type NewsItem = {
+  public type NewsItem = {
     title : Text;
     content : Text;
     createdAt : Nat;
@@ -63,9 +60,24 @@ actor {
 
   let admins = List.empty<Principal>();
   var superAdmin : ?Principal = null;
+  var admissionCounter = 0;
+
+  // Mobile number validation: Only 10 digit Indian numbers
+  func isValidIndianMobileNumber(mobile : Text) : Bool {
+    if (mobile.size() != 10) {
+      return false;
+    };
+    let chars = mobile.toArray();
+    for (c in chars.values()) {
+      if (c.toNat32() < 48 or c.toNat32() > 57) {
+        return false;
+      };
+    };
+    true;
+  };
 
   // Admin management
-  type AdminResponse = {
+  public type AdminResponse = {
     principal : Principal;
     isSuperAdmin : Bool;
   };
@@ -186,7 +198,12 @@ actor {
     userProfiles.add(caller, profile);
   };
 
-  public func submitAdmissionForm(
+  public type SubmitAdmissionFormResult = {
+    #ok;
+    #err : Text;
+  };
+
+  public shared ({ caller }) func submitAdmissionForm(
     fullName : Text,
     fatherName : Text,
     dateOfBirth : Text,
@@ -194,15 +211,31 @@ actor {
     lastQualification : Text,
     address : Text,
     photo : ?Storage.ExternalBlob,
-  ) : async () {
+  ) : async SubmitAdmissionFormResult {
+    // Validate mobile number (Indian 10-digit)
+    if (not isValidIndianMobileNumber(mobile)) {
+      return #err("invalid_mobile_number");
+    };
+
+    // Check if mobile number already exists
+    for ((_, candidate) in candidates.entries()) {
+      if (candidate.mobile == mobile) {
+        return #err("mobile_already_registered");
+      };
+    };
+
+    // Now increment the counter and generate the new admission ID
+    let currentCounter = admissionCounter;
+    admissionCounter += 1;
+
     // Generate admission ID dynamically on each call
     let currentYear = 2023; // Placeholder for actual year retrieval
-    let serialString = debug_show (candidates.size() + 1);
+    let serialString = debug_show (currentCounter + 1);
 
     func zeroPad(text : Text) : Text {
       let textChars = text.toArray();
       let charCount = textChars.size();
-      let padCount = 5 - charCount.toNat();
+      let padCount = 5 - charCount;
       let zeros = Array.tabulate(padCount, func(_) { '0' });
       let paddedChars = zeros.concat(textChars);
       Text.fromArray(paddedChars);
@@ -224,6 +257,7 @@ actor {
     };
 
     candidates.add(admissionID, candidate);
+    #ok;
   };
 
   public query ({ caller }) func getAllCandidates() : async [Candidate] {
@@ -231,6 +265,15 @@ actor {
       Runtime.trap("Unauthorized: Only admins can view all candidates");
     };
     candidates.values().toArray().sort();
+  };
+
+  public query func getCandidateByMobile(mobile : Text) : async ?Candidate {
+    for ((_, candidate) in candidates.entries()) {
+      if (candidate.mobile == mobile) {
+        return ?candidate;
+      };
+    };
+    null;
   };
 
   public shared ({ caller }) func addGalleryItem(image : Storage.ExternalBlob, description : Text) : async () {

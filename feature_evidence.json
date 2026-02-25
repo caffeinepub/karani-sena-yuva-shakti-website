@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-in-the-home-page-hero-section-homepage-tsx-update-the-apply-for-admission-call-to-action-button-to-use-a-distinct-visually-contrasting-highlight-color-that-makes-it-stand-out-prominently-from-the-other-buttons-and-the-hero-background-the-highlight-color-should-complement-but-contrast-clearly-with-the-existing-saffron-gold-deep-red-theme-for-example-a-bright-emerald-green-royal-blue-or-vibrant-accent-not-currently-used-on-the-page-ensure-the-button-retains-readable-text-appropriate-hover-focus-states-and-remains-visually-consistent-with-the-overall-warm-traditional-design-language",
-      "featureTitle": "In the home page hero section (HomePage.tsx), update the 'प्रवेश के लिए आवेदन करें' (Apply for Admission) call-to-action button to use a distinct, visually contrasting highlight color that makes it stand out prominently from the other buttons and the hero background. The highlight color should complement but contrast clearly with the existing saffron/gold/deep-red theme — for example, a bright emerald green, royal blue, or vibrant accent not currently used on the page. Ensure the button retains readable text, appropriate hover/focus states, and remains visually consistent with the overall warm traditional design language.",
+      "featureId": "feature-update-the-mobile-number-validation-in-admissionformpage-tsx-to-accept-exactly-10-digit-indian-mobile-numbers-e-g-9450956184-the-field-must-remain-mandatory-the-error-message-should-read-10-e-g-example-9450956184-remove-any-pakistani-format-03001234567-validation-logic",
+      "featureTitle": "Update the mobile number validation in AdmissionFormPage.tsx to accept exactly 10-digit Indian mobile numbers (e.g., 9450956184). The field must remain mandatory. The error message should read: 'कृपया 10 अंकों का वैध मोबाइल नंबर दर्ज करें' (e.g., example: 9450956184). Remove any Pakistani format (03001234567) validation logic.",
       "files": [
-        "frontend/src/pages/HomePage.tsx"
+        "frontend/src/pages/AdmissionFormPage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -17,7 +17,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-42"
+        "REQ-1"
       ],
       "confidence": "high"
     }

@@ -50,6 +50,10 @@ export const GalleryItem = IDL.Record({
   'description' : IDL.Text,
   'image' : ExternalBlob,
 });
+export const SubmitAdmissionFormResult = IDL.Variant({
+  'ok' : IDL.Null,
+  'err' : IDL.Text,
+});
 
 export const idlService = IDL.Service({
   '_caffeineStorageBlobIsLive' : IDL.Func(
@@ -91,6 +95,11 @@ export const idlService = IDL.Service({
   'getAllNewsItems' : IDL.Func([], [IDL.Vec(NewsItem)], ['query']),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+  'getCandidateByMobile' : IDL.Func(
+      [IDL.Text],
+      [IDL.Opt(Candidate)],
+      ['query'],
+    ),
   'getGalleryItems' : IDL.Func([], [IDL.Vec(GalleryItem)], ['query']),
   'getUserProfile' : IDL.Func(
       [IDL.Principal],
@@ -112,7 +121,7 @@ export const idlService = IDL.Service({
         IDL.Text,
         IDL.Opt(ExternalBlob),
       ],
-      [],
+      [SubmitAdmissionFormResult],
       [],
     ),
 });
@@ -162,6 +171,10 @@ export const idlFactory = ({ IDL }) => {
     'description' : IDL.Text,
     'image' : ExternalBlob,
   });
+  const SubmitAdmissionFormResult = IDL.Variant({
+    'ok' : IDL.Null,
+    'err' : IDL.Text,
+  });
   
   return IDL.Service({
     '_caffeineStorageBlobIsLive' : IDL.Func(
@@ -203,6 +216,11 @@ export const idlFactory = ({ IDL }) => {
     'getAllNewsItems' : IDL.Func([], [IDL.Vec(NewsItem)], ['query']),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+    'getCandidateByMobile' : IDL.Func(
+        [IDL.Text],
+        [IDL.Opt(Candidate)],
+        ['query'],
+      ),
     'getGalleryItems' : IDL.Func([], [IDL.Vec(GalleryItem)], ['query']),
     'getUserProfile' : IDL.Func(
         [IDL.Principal],
@@ -224,7 +242,7 @@ export const idlFactory = ({ IDL }) => {
           IDL.Text,
           IDL.Opt(ExternalBlob),
         ],
-        [],
+        [SubmitAdmissionFormResult],
         [],
       ),
   });

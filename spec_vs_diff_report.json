@@ -1,14 +1,15 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-24T13:40:28.023Z",
-  "summary": "The diff implements REQ-42 by updating the 'प्रवेश के लिए आवेदन करें' button in HomePage.tsx to use emerald green (bg-emerald-600, hover:bg-emerald-700, active:bg-emerald-800) with white text and transition states. This is a distinct color not in the saffron/gold/deep-red palette, with readable text and visible hover/focus states. All other buttons retain their existing styling.",
+  "generatedAt": "2026-02-25T00:09:04.803Z",
+  "summary": "Both REQ-1 (frontend) and REQ-2 (backend) appear to be fully implemented. The frontend AdmissionFormPage.tsx now uses a 10-digit Indian mobile regex, updated Hindi error messages with an Indian example number, and the backend main.mo has a new isValidIndianMobileNumber function validating exactly 10 digits. No hallucinated features detected.",
   "missing_requirements": [],
   "hallucinated_features": [],
-  "confidence": 0.97,
+  "confidence": 0.95,
   "changed_files": [
+    "backend/main.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/pages/HomePage.tsx",
+    "frontend/src/pages/AdmissionFormPage.tsx",
     "project_state.json"
   ]
 }

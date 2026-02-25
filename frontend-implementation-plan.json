@@ -1,23 +1,23 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Highlight 'प्रवेश के लिए आवेदन करें' button with a distinct contrasting color",
+  "title": "Fix mobile number validation to accept 10-digit Indian format",
   "requirements": [
     {
-      "id": "REQ-42",
-      "summary": "Update the 'प्रवेश के लिए आवेदन करें' (Apply for Admission) call-to-action button in the home page hero section to use a distinct, visually contrasting highlight color (e.g., emerald green, royal blue, or vibrant accent) that makes it stand out prominently from the existing saffron/gold/deep-red theme while maintaining readability and appropriate hover/focus states",
+      "id": "REQ-1",
+      "summary": "Update mobile number validation in AdmissionFormPage.tsx to accept exactly 10-digit Indian mobile numbers with Hindi error messages",
       "acceptanceCriteria": [
-        "The 'प्रवेश के लिए आवेदन करें' button on the home page hero section renders in a distinct highlight color that is clearly different from the saffron/gold/deep-red palette used by other elements.",
-        "The button color contrasts visually with the hero section background and surrounding buttons, making it the most prominent CTA on the page.",
-        "The button has a visible hover/focus state that complements the chosen highlight color.",
-        "Button text remains fully legible against the new background color.",
-        "All other buttons and UI elements on the home page retain their existing styling unchanged."
+        "Entering a 10-digit Indian number like 9450956184 passes validation and does not show an error",
+        "Entering fewer or more than 10 digits shows the Hindi error message 'कृपया 10 अंकों का वैध मोबाइल नंबर दर्ज करें'",
+        "Leaving the mobile number field empty shows a required/mandatory error",
+        "The example hint in the error message shows an Indian format number (e.g., 9450956184), not a Pakistani format number",
+        "Form submits successfully when a valid 10-digit number is entered"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/HomePage.tsx",
+          "path": "frontend/src/pages/AdmissionFormPage.tsx",
           "operation": "modify",
-          "description": "Update the 'प्रवेश के लिए आवेदन करें' button styling to use a distinct highlight color (e.g., emerald-600/emerald-700 for hover) that contrasts with the existing warm saffron/gold/deep-red theme. Ensure the button retains white text for legibility and includes appropriate hover and focus states. Do not modify any other buttons or hero section elements."
+          "description": "Update the mobile number validation logic to accept exactly 10 digits (Indian format). Replace the current validation pattern that enforces Pakistani format (11 digits starting with 03) with a pattern that validates exactly 10 digits (digits only, no leading zero required). Update the error message to read 'कृपया 10 अंकों का वैध मोबाइल नंबर दर्ज करें (जैसे: 9450956184)'. Remove any references to Pakistani format (03001234567) from validation logic and error messages. Ensure the field remains mandatory and that the validation triggers on blur and on form submission."
         }
       ]
     }
