@@ -2,9 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-update-the-mobile-number-validation-in-admissionformpage-tsx-to-accept-exactly-10-digit-indian-mobile-numbers-e-g-9450956184-the-field-must-remain-mandatory-the-error-message-should-read-10-e-g-example-9450956184-remove-any-pakistani-format-03001234567-validation-logic",
-      "featureTitle": "Update the mobile number validation in AdmissionFormPage.tsx to accept exactly 10-digit Indian mobile numbers (e.g., 9450956184). The field must remain mandatory. The error message should read: 'कृपया 10 अंकों का वैध मोबाइल नंबर दर्ज करें' (e.g., example: 9450956184). Remove any Pakistani format (03001234567) validation logic.",
+      "featureId": "feature-remove-or-stop-using-any-frontend-side-temporary-admission-id-generation-logic-in-usesubmitadmissionform-ts-or-admissionformpage-tsx-the-admission-id-displayed-after-submission-must-come-directly-from-the-backend-response-not-be-generated-on-the-frontend",
+      "featureTitle": "Remove or stop using any frontend-side temporary admission ID generation logic in useSubmitAdmissionForm.ts or AdmissionFormPage.tsx. The admission ID displayed after submission must come directly from the backend response, not be generated on the frontend.",
       "files": [
+        "frontend/src/hooks/useSubmitAdmissionForm.ts",
         "frontend/src/pages/AdmissionFormPage.tsx"
       ],
       "components": [
@@ -17,7 +18,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-1"
+        "REQ-2"
       ],
       "confidence": "high"
     }

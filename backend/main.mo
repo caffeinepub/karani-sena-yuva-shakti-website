@@ -13,13 +13,17 @@ import Storage "blob-storage/Storage";
 import MixinStorage "blob-storage/Mixin";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
+import Migration "migration";
+import Time "mo:core/Time";
 
+(with migration = Migration.run)
 actor {
   include MixinStorage();
 
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
 
+  // Data Types
   public type UserProfile = {
     name : Text;
   };
@@ -31,7 +35,7 @@ actor {
     mobile : Text;
     lastQualification : Text;
     address : Text;
-    createdAt : Nat;
+    createdAt : Int;
     admissionID : Text;
     photo : ?Storage.ExternalBlob;
   };
@@ -44,7 +48,7 @@ actor {
   public type NewsItem = {
     title : Text;
     content : Text;
-    createdAt : Nat;
+    createdAt : Int;
   };
 
   module Candidate {
@@ -199,10 +203,17 @@ actor {
   };
 
   public type SubmitAdmissionFormResult = {
-    #ok;
-    #err : Text;
+    #ok : Text; // Return admission ID on success
+    #err : SubmitAdmissionFormError;
   };
 
+  public type SubmitAdmissionFormError = {
+    #invalidMobileNumber;
+    #mobileAlreadyRegistered : Text; // Return existing admission ID
+  };
+
+  // submitAdmissionForm is intentionally open to all callers (including anonymous/guests)
+  // so that candidates can submit the admission form without needing an account.
   public shared ({ caller }) func submitAdmissionForm(
     fullName : Text,
     fatherName : Text,
@@ -214,23 +225,20 @@ actor {
   ) : async SubmitAdmissionFormResult {
     // Validate mobile number (Indian 10-digit)
     if (not isValidIndianMobileNumber(mobile)) {
-      return #err("invalid_mobile_number");
+      return #err(#invalidMobileNumber);
     };
 
-    // Check if mobile number already exists
+    // Check for existing candidate by mobile number and return admission ID if found
     for ((_, candidate) in candidates.entries()) {
       if (candidate.mobile == mobile) {
-        return #err("mobile_already_registered");
+        return #err(#mobileAlreadyRegistered(candidate.admissionID));
       };
     };
 
-    // Now increment the counter and generate the new admission ID
-    let currentCounter = admissionCounter;
+    // Increment admission counter and generate admission ID
     admissionCounter += 1;
-
-    // Generate admission ID dynamically on each call
-    let currentYear = 2023; // Placeholder for actual year retrieval
-    let serialString = debug_show (currentCounter + 1);
+    let currentYear = 2024;
+    let serialString = debug_show (admissionCounter);
 
     func zeroPad(text : Text) : Text {
       let textChars = text.toArray();
@@ -244,6 +252,7 @@ actor {
     let paddedSerial = zeroPad(serialString);
     let admissionID = currentYear.toText().concat("0").concat(paddedSerial);
 
+    // Create and store candidate
     let candidate : Candidate = {
       fullName;
       fatherName;
@@ -251,13 +260,13 @@ actor {
       mobile;
       lastQualification;
       address;
-      createdAt = 0;
+      createdAt = Time.now();
       admissionID;
       photo;
     };
 
     candidates.add(admissionID, candidate);
-    #ok;
+    #ok(admissionID);
   };
 
   public query ({ caller }) func getAllCandidates() : async [Candidate] {
@@ -267,7 +276,12 @@ actor {
     candidates.values().toArray().sort();
   };
 
-  public query func getCandidateByMobile(mobile : Text) : async ?Candidate {
+  // getCandidateByMobile exposes full PII (address, DOB, father's name, photo).
+  // Restricted to admins only to protect candidate privacy.
+  public query ({ caller }) func getCandidateByMobile(mobile : Text) : async ?Candidate {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
+      Runtime.trap("Unauthorized: Only admins can look up candidates by mobile number");
+    };
     for ((_, candidate) in candidates.entries()) {
       if (candidate.mobile == mobile) {
         return ?candidate;
@@ -298,7 +312,7 @@ actor {
     gallery.remove(description);
   };
 
-  public shared ({ caller }) func createNewsItem(title : Text, content : Text, createdAt : Nat) : async () {
+  public shared ({ caller }) func createNewsItem(title : Text, content : Text, createdAt : Int) : async () {
     if (not AccessControl.isAdmin(accessControlState, caller)) {
       Runtime.trap("Unauthorized: Only admins can create news items");
     };
@@ -310,7 +324,7 @@ actor {
     newsItems.add(title, newsItem);
   };
 
-  public shared ({ caller }) func editNewsItem(title : Text, content : Text, createdAt : Nat) : async () {
+  public shared ({ caller }) func editNewsItem(title : Text, content : Text, createdAt : Int) : async () {
     if (not AccessControl.isAdmin(accessControlState, caller)) {
       Runtime.trap("Unauthorized: Only admins can edit news items");
     };

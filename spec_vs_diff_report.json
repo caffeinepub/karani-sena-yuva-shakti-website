@@ -1,14 +1,25 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-25T00:09:04.803Z",
-  "summary": "Both REQ-1 (frontend) and REQ-2 (backend) appear to be fully implemented. The frontend AdmissionFormPage.tsx now uses a 10-digit Indian mobile regex, updated Hindi error messages with an Indian example number, and the backend main.mo has a new isValidIndianMobileNumber function validating exactly 10 digits. No hallucinated features detected.",
+  "generatedAt": "2026-02-25T00:37:24.181Z",
+  "summary": "The diff implements all three requirements. REQ-2 is addressed in useSubmitAdmissionForm.ts (no frontend ID generation, backend-returned ID used exclusively). REQ-1 is addressed in backend/main.mo (sequential numeric ID returned on submission) and frontend AdmissionFormPage.tsx (displays backend-returned ID). REQ-3 is addressed in useSubmitAdmissionForm.ts (MobileAlreadyRegisteredError with existingAdmissionID) and backend/main.mo (duplicate mobile check). All acceptance criteria appear to be met based on the diff evidence.",
   "missing_requirements": [],
-  "hallucinated_features": [],
-  "confidence": 0.95,
+  "hallucinated_features": [
+    {
+      "description": "A migration module (backend/migration.mo) was added that transforms createdAt fields from Nat to Int for both candidates and newsItems.",
+      "reason": "The build request makes no mention of a data migration or changing the createdAt field type. This is a schema migration not requested in any REQ.",
+      "evidence": [
+        "backend/migration.mo",
+        "backend/main.mo"
+      ]
+    }
+  ],
+  "confidence": 0.82,
   "changed_files": [
     "backend/main.mo",
+    "backend/migration.mo",
     "frontend-file-summaries.txt",
+    "frontend/src/hooks/useSubmitAdmissionForm.ts",
     "frontend/src/pages/AdmissionFormPage.tsx",
     "project_state.json"
   ]

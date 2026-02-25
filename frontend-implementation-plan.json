@@ -1,23 +1,31 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Fix mobile number validation to accept 10-digit Indian format",
+  "title": "Fix admission ID format inconsistency on first form submission",
   "requirements": [
     {
-      "id": "REQ-1",
-      "summary": "Update mobile number validation in AdmissionFormPage.tsx to accept exactly 10-digit Indian mobile numbers with Hindi error messages",
+      "id": "REQ-2",
+      "summary": "Remove frontend-side temporary admission ID generation and display backend-returned admission ID directly",
       "acceptanceCriteria": [
-        "Entering a 10-digit Indian number like 9450956184 passes validation and does not show an error",
-        "Entering fewer or more than 10 digits shows the Hindi error message 'कृपया 10 अंकों का वैध मोबाइल नंबर दर्ज करें'",
-        "Leaving the mobile number field empty shows a required/mandatory error",
-        "The example hint in the error message shows an Indian format number (e.g., 9450956184), not a Pakistani format number",
-        "Form submits successfully when a valid 10-digit number is entered"
+        "No temporary ID (e.g., '20260-XXXXX' format) is ever generated or displayed on the frontend.",
+        "The AdmissionCard component receives and displays the admission ID returned directly from the backend after form submission.",
+        "The useSubmitAdmissionForm hook uses the backend-returned ID value exclusively."
       ],
       "file_operations": [
         {
+          "path": "frontend/src/hooks/useSubmitAdmissionForm.ts",
+          "operation": "modify",
+          "description": "Remove all temporary admission ID generation logic. The mutation function must return only the admission ID received directly from the backend response (result.ok when result.__kind__ === 'ok'). Do not generate any frontend-side IDs like '20260-34913'. Ensure the returned admissionId matches the backend format (e.g., '2023000008')."
+        },
+        {
           "path": "frontend/src/pages/AdmissionFormPage.tsx",
           "operation": "modify",
-          "description": "Update the mobile number validation logic to accept exactly 10 digits (Indian format). Replace the current validation pattern that enforces Pakistani format (11 digits starting with 03) with a pattern that validates exactly 10 digits (digits only, no leading zero required). Update the error message to read 'कृपया 10 अंकों का वैध मोबाइल नंबर दर्ज करें (जैसे: 9450956184)'. Remove any references to Pakistani format (03001234567) from validation logic and error messages. Ensure the field remains mandatory and that the validation triggers on blur and on form submission."
+          "description": "Update the form submission success handler to use the admission ID returned by the useSubmitAdmissionForm mutation directly. Remove any logic that generates or transforms the admission ID on the frontend. Pass the backend-returned ID to the AdmissionCard component without modification. Handle the mobileAlreadyRegistered error case by displaying the existing admission ID returned in the error payload."
+        },
+        {
+          "path": "frontend/src/components/AdmissionCard.tsx",
+          "operation": "modify",
+          "description": "Ensure the AdmissionCard component displays the admissionID prop exactly as received, without any frontend-side formatting or transformation. The displayed ID must match the backend format (e.g., '2023000008') visible in the Admin portal."
         }
       ]
     }

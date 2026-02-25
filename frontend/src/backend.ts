@@ -91,10 +91,10 @@ export class ExternalBlob {
 }
 export type SubmitAdmissionFormResult = {
     __kind__: "ok";
-    ok: null;
+    ok: string;
 } | {
     __kind__: "err";
-    err: string;
+    err: SubmitAdmissionFormError;
 };
 export interface Candidate {
     lastQualification: string;
@@ -110,6 +110,13 @@ export interface Candidate {
 export interface _CaffeineStorageRefillInformation {
     proposed_top_up_amount?: bigint;
 }
+export type SubmitAdmissionFormError = {
+    __kind__: "invalidMobileNumber";
+    invalidMobileNumber: null;
+} | {
+    __kind__: "mobileAlreadyRegistered";
+    mobileAlreadyRegistered: string;
+};
 export interface AdminResponse {
     principal: Principal;
     isSuperAdmin: boolean;
@@ -169,7 +176,7 @@ export interface backendInterface {
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     submitAdmissionForm(fullName: string, fatherName: string, dateOfBirth: string, mobile: string, lastQualification: string, address: string, photo: ExternalBlob | null): Promise<SubmitAdmissionFormResult>;
 }
-import type { Candidate as _Candidate, ExternalBlob as _ExternalBlob, GalleryItem as _GalleryItem, SubmitAdmissionFormResult as _SubmitAdmissionFormResult, UserProfile as _UserProfile, UserRole as _UserRole, _CaffeineStorageRefillInformation as __CaffeineStorageRefillInformation, _CaffeineStorageRefillResult as __CaffeineStorageRefillResult } from "./declarations/backend.did.d.ts";
+import type { Candidate as _Candidate, ExternalBlob as _ExternalBlob, GalleryItem as _GalleryItem, SubmitAdmissionFormError as _SubmitAdmissionFormError, SubmitAdmissionFormResult as _SubmitAdmissionFormResult, UserProfile as _UserProfile, UserRole as _UserRole, _CaffeineStorageRefillInformation as __CaffeineStorageRefillInformation, _CaffeineStorageRefillResult as __CaffeineStorageRefillResult } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
     async _caffeineStorageBlobIsLive(arg0: Uint8Array): Promise<boolean> {
@@ -574,6 +581,9 @@ async function from_candid_ExternalBlob_n15(_uploadFile: (file: ExternalBlob) =>
 async function from_candid_GalleryItem_n21(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _GalleryItem): Promise<GalleryItem> {
     return await from_candid_record_n22(_uploadFile, _downloadFile, value);
 }
+function from_candid_SubmitAdmissionFormError_n26(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _SubmitAdmissionFormError): SubmitAdmissionFormError {
+    return from_candid_variant_n27(_uploadFile, _downloadFile, value);
+}
 function from_candid_SubmitAdmissionFormResult_n24(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _SubmitAdmissionFormResult): SubmitAdmissionFormResult {
     return from_candid_variant_n25(_uploadFile, _downloadFile, value);
 }
@@ -665,22 +675,41 @@ function from_candid_variant_n18(_uploadFile: (file: ExternalBlob) => Promise<Ui
     return "admin" in value ? UserRole.admin : "user" in value ? UserRole.user : "guest" in value ? UserRole.guest : value;
 }
 function from_candid_variant_n25(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
-    ok: null;
+    ok: string;
 } | {
-    err: string;
+    err: _SubmitAdmissionFormError;
 }): {
     __kind__: "ok";
-    ok: null;
+    ok: string;
 } | {
     __kind__: "err";
-    err: string;
+    err: SubmitAdmissionFormError;
 } {
     return "ok" in value ? {
         __kind__: "ok",
         ok: value.ok
     } : "err" in value ? {
         __kind__: "err",
-        err: value.err
+        err: from_candid_SubmitAdmissionFormError_n26(_uploadFile, _downloadFile, value.err)
+    } : value;
+}
+function from_candid_variant_n27(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    invalidMobileNumber: null;
+} | {
+    mobileAlreadyRegistered: string;
+}): {
+    __kind__: "invalidMobileNumber";
+    invalidMobileNumber: null;
+} | {
+    __kind__: "mobileAlreadyRegistered";
+    mobileAlreadyRegistered: string;
+} {
+    return "invalidMobileNumber" in value ? {
+        __kind__: "invalidMobileNumber",
+        invalidMobileNumber: value.invalidMobileNumber
+    } : "mobileAlreadyRegistered" in value ? {
+        __kind__: "mobileAlreadyRegistered",
+        mobileAlreadyRegistered: value.mobileAlreadyRegistered
     } : value;
 }
 async function from_candid_vec_n11(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_Candidate>): Promise<Array<Candidate>> {

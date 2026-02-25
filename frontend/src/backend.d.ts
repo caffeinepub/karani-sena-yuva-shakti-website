@@ -16,10 +16,10 @@ export class ExternalBlob {
 }
 export type SubmitAdmissionFormResult = {
     __kind__: "ok";
-    ok: null;
+    ok: string;
 } | {
     __kind__: "err";
-    err: string;
+    err: SubmitAdmissionFormError;
 };
 export interface Candidate {
     lastQualification: string;
@@ -32,6 +32,13 @@ export interface Candidate {
     mobile: string;
     photo?: ExternalBlob;
 }
+export type SubmitAdmissionFormError = {
+    __kind__: "invalidMobileNumber";
+    invalidMobileNumber: null;
+} | {
+    __kind__: "mobileAlreadyRegistered";
+    mobileAlreadyRegistered: string;
+};
 export interface AdminResponse {
     principal: Principal;
     isSuperAdmin: boolean;

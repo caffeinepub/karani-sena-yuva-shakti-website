@@ -1,13 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Fix mobile number validation to accept 10-digit Indian format instead of the Pakistani 11-digit format.
+**Goal:** Fix the admission ID format inconsistency so that the AdmissionCard always displays the backend's sequential numeric ID (e.g., 2023000008) immediately after first form submission, instead of a frontend-generated temporary ID (e.g., 20260-34913).
 
 **Planned changes:**
-- Update frontend (`AdmissionFormPage.tsx`) mobile number validation regex to accept exactly 10 digits (Indian format, e.g., 9450956184)
-- Update the Hindi error message to: 'कृपया 10 अंकों का वैध मोबाइल नंबर दर्ज करें (जैसे: 9450956184)'
-- Remove Pakistani format (03001234567, 11 digits) validation logic from frontend
-- Update backend (`main.mo`) mobile number validation to accept exactly 10 digits and reject any other length
-- Keep the mobile number field mandatory in both frontend and backend
+- Remove frontend-side temporary admission ID generation logic from `useSubmitAdmissionForm.ts` and/or `AdmissionFormPage.tsx`
+- Update the `submitAdmissionForm` backend function to return the persistent sequential numeric admission ID in its response
+- Update the frontend to use only the backend-returned admission ID when rendering the AdmissionCard after submission
+- Add a duplicate mobile number check in the backend before creating a new admission record; if the mobile already exists, return the existing candidate's admission ID instead of creating a duplicate
 
-**User-visible outcome:** Users entering a valid 10-digit Indian mobile number (e.g., 9450956184) will no longer see a validation error, and the form will submit successfully.
+**User-visible outcome:** After submitting the admission form for the first time, the AdmissionCard immediately shows the same sequential numeric ID (e.g., 2023000008) that appears in the Admin portal — no temporary or mismatched ID is ever displayed. Re-submitting with the same mobile number returns the existing ID without creating a duplicate record.

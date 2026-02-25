@@ -32,7 +32,7 @@ export const AdminResponse = IDL.Record({
 export const Candidate = IDL.Record({
   'lastQualification' : IDL.Text,
   'dateOfBirth' : IDL.Text,
-  'createdAt' : IDL.Nat,
+  'createdAt' : IDL.Int,
   'fullName' : IDL.Text,
   'fatherName' : IDL.Text,
   'address' : IDL.Text,
@@ -43,16 +43,20 @@ export const Candidate = IDL.Record({
 export const NewsItem = IDL.Record({
   'title' : IDL.Text,
   'content' : IDL.Text,
-  'createdAt' : IDL.Nat,
+  'createdAt' : IDL.Int,
 });
 export const UserProfile = IDL.Record({ 'name' : IDL.Text });
 export const GalleryItem = IDL.Record({
   'description' : IDL.Text,
   'image' : ExternalBlob,
 });
+export const SubmitAdmissionFormError = IDL.Variant({
+  'invalidMobileNumber' : IDL.Null,
+  'mobileAlreadyRegistered' : IDL.Text,
+});
 export const SubmitAdmissionFormResult = IDL.Variant({
-  'ok' : IDL.Null,
-  'err' : IDL.Text,
+  'ok' : IDL.Text,
+  'err' : SubmitAdmissionFormError,
 });
 
 export const idlService = IDL.Service({
@@ -86,10 +90,10 @@ export const idlService = IDL.Service({
   'addAdmin' : IDL.Func([IDL.Principal], [IDL.Bool], []),
   'addGalleryItem' : IDL.Func([ExternalBlob, IDL.Text], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
-  'createNewsItem' : IDL.Func([IDL.Text, IDL.Text, IDL.Nat], [], []),
+  'createNewsItem' : IDL.Func([IDL.Text, IDL.Text, IDL.Int], [], []),
   'deleteGalleryItem' : IDL.Func([IDL.Text], [], []),
   'deleteNewsItem' : IDL.Func([IDL.Text], [], []),
-  'editNewsItem' : IDL.Func([IDL.Text, IDL.Text, IDL.Nat], [], []),
+  'editNewsItem' : IDL.Func([IDL.Text, IDL.Text, IDL.Int], [], []),
   'getAdmins' : IDL.Func([], [IDL.Vec(AdminResponse)], ['query']),
   'getAllCandidates' : IDL.Func([], [IDL.Vec(Candidate)], ['query']),
   'getAllNewsItems' : IDL.Func([], [IDL.Vec(NewsItem)], ['query']),
@@ -153,7 +157,7 @@ export const idlFactory = ({ IDL }) => {
   const Candidate = IDL.Record({
     'lastQualification' : IDL.Text,
     'dateOfBirth' : IDL.Text,
-    'createdAt' : IDL.Nat,
+    'createdAt' : IDL.Int,
     'fullName' : IDL.Text,
     'fatherName' : IDL.Text,
     'address' : IDL.Text,
@@ -164,16 +168,20 @@ export const idlFactory = ({ IDL }) => {
   const NewsItem = IDL.Record({
     'title' : IDL.Text,
     'content' : IDL.Text,
-    'createdAt' : IDL.Nat,
+    'createdAt' : IDL.Int,
   });
   const UserProfile = IDL.Record({ 'name' : IDL.Text });
   const GalleryItem = IDL.Record({
     'description' : IDL.Text,
     'image' : ExternalBlob,
   });
+  const SubmitAdmissionFormError = IDL.Variant({
+    'invalidMobileNumber' : IDL.Null,
+    'mobileAlreadyRegistered' : IDL.Text,
+  });
   const SubmitAdmissionFormResult = IDL.Variant({
-    'ok' : IDL.Null,
-    'err' : IDL.Text,
+    'ok' : IDL.Text,
+    'err' : SubmitAdmissionFormError,
   });
   
   return IDL.Service({
@@ -207,10 +215,10 @@ export const idlFactory = ({ IDL }) => {
     'addAdmin' : IDL.Func([IDL.Principal], [IDL.Bool], []),
     'addGalleryItem' : IDL.Func([ExternalBlob, IDL.Text], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
-    'createNewsItem' : IDL.Func([IDL.Text, IDL.Text, IDL.Nat], [], []),
+    'createNewsItem' : IDL.Func([IDL.Text, IDL.Text, IDL.Int], [], []),
     'deleteGalleryItem' : IDL.Func([IDL.Text], [], []),
     'deleteNewsItem' : IDL.Func([IDL.Text], [], []),
-    'editNewsItem' : IDL.Func([IDL.Text, IDL.Text, IDL.Nat], [], []),
+    'editNewsItem' : IDL.Func([IDL.Text, IDL.Text, IDL.Int], [], []),
     'getAdmins' : IDL.Func([], [IDL.Vec(AdminResponse)], ['query']),
     'getAllCandidates' : IDL.Func([], [IDL.Vec(Candidate)], ['query']),
     'getAllNewsItems' : IDL.Func([], [IDL.Vec(NewsItem)], ['query']),

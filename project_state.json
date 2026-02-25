@@ -1,18 +1,21 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Aavedan Form project with Hindi UI. Mobile number validation being fixed to accept 10-digit Indian format (mandatory field).",
+  "summary": "Admission/registration portal project with admin and candidate portals. A bug exists where candidates receive a different ID format on first form submission vs. retrieval. The fix ensures the Admin portal ID format (e.g., 2023000008) is shown consistently on both portals, and duplicate registrations are prevented via mobile number check.",
   "architectural_notes": [
-    "Mobile number field: 10-digit Indian format, mandatory, error message in Hindi"
+    "Two portals exist: Admin portal and Candidate portal — both must show the same ID for a given candidate",
+    "ID format standard: Admin portal style (e.g., 2023000008) is the canonical format to use everywhere"
   ],
-  "known_issues": [],
+  "known_issues": [
+    "Candidate receives a different temporary ID (e.g., 20260-34913) on first form submission instead of the Admin portal ID format (2023000008); only correct ID appears on re-retrieval"
+  ],
   "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-update-the-mobile-number-validation-in-admissionformpage-tsx-to-accept-exactly-10-digit-indian-mobile-numbers-e-g-9450956184-the-field-must-remain-mandatory-the-error-message-should-read-10-e-g-example-9450956184-remove-any-pakistani-format-03001234567-validation-logic",
-      "title": "Update the mobile number validation in AdmissionFormPage.tsx to accept exactly 10-digit Indian mobile numbers (e.g., 9450956184). The field must remain mandatory. The error message should read: 'कृपया 10 अंकों का वैध मोबाइल नंबर दर्ज करें' (e.g., example: 9450956184). Remove any Pakistani format (03001234567) validation logic.",
+      "id": "feature-remove-or-stop-using-any-frontend-side-temporary-admission-id-generation-logic-in-usesubmitadmissionform-ts-or-admissionformpage-tsx-the-admission-id-displayed-after-submission-must-come-directly-from-the-backend-response-not-be-generated-on-the-frontend",
+      "title": "Remove or stop using any frontend-side temporary admission ID generation logic in useSubmitAdmissionForm.ts or AdmissionFormPage.tsx. The admission ID displayed after submission must come directly from the backend response, not be generated on the frontend.",
       "reqIds": [
-        "REQ-1"
+        "REQ-2"
       ],
       "version": 1
     }
@@ -20,21 +23,23 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Fix mobile number validation to accept 10-digit Indian format (mandatory)",
-      "reqIds": [],
+      "summary": "When a candidate submits the admission form for the first time, the backend must return the stored admission ID in the Admin portal format (e.g., 2023000008 — a sequential numeric ID) immediately upon form submission, not a temporary frontend-generated ID like '20260-34913'. The ID shown on the AdmissionCard right after first submission must be identical to the ID stored in the backend and visible in the Admin portal.",
+      "reqIds": [
+        "REQ-1"
+      ],
       "status": "pending"
     },
     {
       "id": "AR-3",
-      "summary": "Update the mobile number validation in backend/main.mo to accept exactly 10-digit Indian mobile numbers (digits only, no leading zero or country code required). Remove any validation that enforces Pakistani format (11 digits starting with 03).",
+      "summary": "Ensure duplicate mobile number registration is prevented: before creating a new admission record, the backend must check if a candidate with the same mobile number already exists. If they do, return the existing candidate's admission ID instead of creating a new record.",
       "reqIds": [
-        "REQ-2"
+        "REQ-3"
       ],
       "status": "pending"
     }
   ],
   "gameProjectType": "none",
-  "projectName": "Aavedan Form",
+  "projectName": "Karni Sena Yuva Shakti",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

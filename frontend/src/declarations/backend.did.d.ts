@@ -32,8 +32,10 @@ export interface NewsItem {
   'content' : string,
   'createdAt' : bigint,
 }
-export type SubmitAdmissionFormResult = { 'ok' : null } |
-  { 'err' : string };
+export type SubmitAdmissionFormError = { 'invalidMobileNumber' : null } |
+  { 'mobileAlreadyRegistered' : string };
+export type SubmitAdmissionFormResult = { 'ok' : string } |
+  { 'err' : SubmitAdmissionFormError };
 export interface UserProfile { 'name' : string }
 export type UserRole = { 'admin' : null } |
   { 'user' : null } |

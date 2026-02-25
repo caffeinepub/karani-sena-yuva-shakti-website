@@ -1,57 +1,77 @@
 {
   "kind": "build_request",
-  "title": "Fix mobile number validation to accept 10-digit Indian format",
+  "title": "Fix admission ID format inconsistency on first form submission",
+  "projectName": "Karni Sena Yuva Shakti",
   "priority": "high",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Update the mobile number validation in AdmissionFormPage.tsx to accept exactly 10-digit Indian mobile numbers (e.g., 9450956184). The field must remain mandatory. The error message should read: 'कृपया 10 अंकों का वैध मोबाइल नंबर दर्ज करें' (e.g., example: 9450956184). Remove any Pakistani format (03001234567) validation logic.",
-      "target": "frontend",
+      "text": "When a candidate submits the admission form for the first time, the backend must return the stored admission ID in the Admin portal format (e.g., 2023000008 — a sequential numeric ID) immediately upon form submission, not a temporary frontend-generated ID like '20260-34913'. The ID shown on the AdmissionCard right after first submission must be identical to the ID stored in the backend and visible in the Admin portal.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-recent"
+          "msg-6",
+          "msg-8",
+          "msg-10"
         ],
         "quotes": [
-          "Mob no. 10 ank wala ho.mandatory ho",
-          "कृपया वैध मोबाइल नंबर दर्ज करें (जैसे: 03001234567)"
+          "Admin portal wala",
+          "candidate ke form submit karne ke baad hi hota hai agar vah id punah prapat kare toh admin portal ke saman aati hai"
         ]
       },
       "acceptanceCriteria": [
-        "Entering a 10-digit Indian number like 9450956184 passes validation and does not show an error",
-        "Entering fewer or more than 10 digits shows the Hindi error message 'कृपया 10 अंकों का वैध मोबाइल नंबर दर्ज करें'",
-        "Leaving the mobile number field empty shows a required/mandatory error",
-        "The example hint in the error message shows an Indian format number (e.g., 9450956184), not a Pakistani format number",
-        "Form submits successfully when a valid 10-digit number is entered"
+        "After first form submission, the AdmissionCard displays the same numeric ID format (e.g., 2023000008) that appears in the Admin portal for that candidate.",
+        "The backend submitAdmissionForm function returns the persistent sequential numeric admission ID, not any temporary frontend-generated ID.",
+        "Re-retrieving the same candidate by mobile number returns the exact same ID that was shown immediately after first submission."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Update the mobile number validation in backend/main.mo to accept exactly 10-digit Indian mobile numbers (digits only, no leading zero or country code required). Remove any validation that enforces Pakistani format (11 digits starting with 03).",
-      "target": "backend",
+      "text": "Remove or stop using any frontend-side temporary admission ID generation logic in useSubmitAdmissionForm.ts or AdmissionFormPage.tsx. The admission ID displayed after submission must come directly from the backend response, not be generated on the frontend.",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-recent"
+          "msg-6",
+          "msg-10"
         ],
         "quotes": [
-          "Mob no. 10 ank wala ho.mandatory ho"
+          "Form submit hone par candidate portal apna alag ID format generate kar raha hai"
         ]
       },
       "acceptanceCriteria": [
-        "Backend accepts a 10-digit number like 9450956184 as valid",
-        "Backend rejects numbers that are not exactly 10 digits",
-        "Backend rejects empty mobile number strings"
+        "No temporary ID (e.g., '20260-XXXXX' format) is ever generated or displayed on the frontend.",
+        "The AdmissionCard component receives and displays the admission ID returned directly from the backend after form submission.",
+        "The useSubmitAdmissionForm hook uses the backend-returned ID value exclusively."
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Ensure duplicate mobile number registration is prevented: before creating a new admission record, the backend must check if a candidate with the same mobile number already exists. If they do, return the existing candidate's admission ID instead of creating a new record.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-8",
+          "msg-10"
+        ],
+        "quotes": [
+          "mobile number se check hota hai ki vah vyakti pehle se registered hai ya nahi"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Submitting the admission form with an already-registered mobile number does not create a duplicate record.",
+        "When a duplicate mobile is detected, the backend returns the existing candidate's admission ID.",
+        "The frontend correctly handles and displays the existing ID when a duplicate mobile submission occurs."
       ]
     }
   ],
   "constraints": [
-    "Do not change any other form fields or validation rules",
-    "Keep the mobile number field mandatory (required)",
-    "All user-facing error messages must remain in Hindi"
+    "Do not change the admission ID format currently used in the Admin portal (sequential numeric format like 2023000008).",
+    "Do not alter any immutable frontend paths listed in the system context."
   ],
   "nonGoals": [
-    "Adding support for international phone formats",
-    "Making mobile number optional",
-    "Changing any other part of the admission form UI or backend logic"
+    "Changing the visual design of the AdmissionCard.",
+    "Adding new form fields to the admission form.",
+    "Modifying the Admin portal's candidate management UI."
   ],
   "imageRequirements": {
     "required": [],

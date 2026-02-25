@@ -1,29 +1,39 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-25T00:09:04.806Z",
+  "generatedAt": "2026-02-25T00:37:24.184Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 2,
+    "total": 3,
     "implemented": 1,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Update the mobile number validation in AdmissionFormPage.tsx to accept exactly 10-digit Indian mobile numbers (e.g., 9450956184). The field must remain mandatory. The error message should read: 'कृपया 10 अंकों का वैध मोबाइल नंबर दर्ज करें' (e.g., example: 9450956184). Remove any Pakistani format (03001234567) validation logic.",
+        "summary": "When a candidate submits the admission form for the first time, the backend must return the stored admission ID in the Admin portal format (e.g., 2023000008 — a sequential numeric ID) immediately upon form submission, not a temporary frontend-generated ID like '20260-34913'. The ID shown on the AdmissionCard right after first submission must be identical to the ID stored in the backend and visible in the Admin portal.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-2",
+        "summary": "Remove or stop using any frontend-side temporary admission ID generation logic in useSubmitAdmissionForm.ts or AdmissionFormPage.tsx. The admission ID displayed after submission must come directly from the backend response, not be generated on the frontend.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/AdmissionFormPage.tsx"
+          "frontend/src/hooks/useSubmitAdmissionForm.ts",
+          "frontend/src/pages/AdmissionFormPage.tsx",
+          "frontend/src/components/AdmissionCard.tsx"
         ],
         "matchedFiles": [
+          "frontend/src/hooks/useSubmitAdmissionForm.ts",
           "frontend/src/pages/AdmissionFormPage.tsx"
         ]
       },
       {
-        "id": "REQ-2",
-        "summary": "Update the mobile number validation in backend/main.mo to accept exactly 10-digit Indian mobile numbers (digits only, no leading zero or country code required). Remove any validation that enforces Pakistani format (11 digits starting with 03).",
+        "id": "REQ-3",
+        "summary": "Ensure duplicate mobile number registration is prevented: before creating a new admission record, the backend must check if a candidate with the same mobile number already exists. If they do, return the existing candidate's admission ID instead of creating a new record.",
         "status": "unknown",
         "plannedFiles": [],
         "matchedFiles": []
@@ -32,10 +42,16 @@
   },
   "changedFiles": [
     "backend/main.mo",
+    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useSubmitAdmissionForm.ts",
     "frontend/src/pages/AdmissionFormPage.tsx",
     "project_state.json",
     "scratch/component-selection.json",

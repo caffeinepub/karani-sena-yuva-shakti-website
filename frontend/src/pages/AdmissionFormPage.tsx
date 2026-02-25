@@ -39,6 +39,7 @@ export default function AdmissionFormPage() {
   const [submissionData, setSubmissionData] = useState<{
     admissionID: string;
     submittedDate: Date;
+    isExisting?: boolean;
   } | null>(null);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [generalError, setGeneralError] = useState<string | null>(null);
@@ -126,19 +127,18 @@ export default function AdmissionFormPage() {
           setSubmissionData({
             admissionID,
             submittedDate: new Date(),
+            isExisting: false,
           });
         },
         onError: (error) => {
           console.error('Admission form submission error:', error);
           if (error instanceof MobileAlreadyRegisteredError) {
-            setFieldErrors((prev) => ({
-              ...prev,
-              mobile: 'यह मोबाइल नंबर पहले से पंजीकृत है। कृपया ID कार्ड पुनः प्रिंट करें।',
-            }));
-            if (mobileRef.current) {
-              mobileRef.current.focus();
-              mobileRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
+            // Show the existing admission card with the backend-returned ID
+            setSubmissionData({
+              admissionID: error.existingAdmissionID,
+              submittedDate: new Date(),
+              isExisting: true,
+            });
           } else if (error.message === 'invalid_mobile_number') {
             setFieldErrors((prev) => ({
               ...prev,
@@ -180,8 +180,9 @@ export default function AdmissionFormPage() {
           <Alert className="print:hidden">
             <Info className="h-4 w-4" />
             <AlertDescription>
-              आपका आवेदन सफलतापूर्वक जमा हो गया है। कृपया अपने रिकॉर्ड के लिए इस प्रवेश पत्र को सहेजें या प्रिंट करें।
-              आपकी आधिकारिक प्रवेश आईडी प्रशासन द्वारा पुष्टि की जाएगी।
+              {submissionData.isExisting
+                ? 'यह मोबाइल नंबर पहले से पंजीकृत है। आपका प्रवेश पत्र नीचे दिए गए प्रिंट बटन से प्रिंट करें।'
+                : 'आपका आवेदन सफलतापूर्वक जमा हो गया है। कृपया अपने रिकॉर्ड के लिए इस प्रवेश पत्र को सहेजें या प्रिंट करें।'}
             </AlertDescription>
           </Alert>
 
